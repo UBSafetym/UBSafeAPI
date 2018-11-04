@@ -1,0 +1,6 @@
+{
+    "dependencies": {
+        "express": "^4.16.4",
+        "firebase-admin": "^6.1.0"
+    }
+}
