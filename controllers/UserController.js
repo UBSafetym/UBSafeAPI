@@ -24,7 +24,7 @@ router.get('/users', (req, res) => {
 
 router.get('/users/:userID', async (req, res) => {
     getUser(req.params.userID).then( result => {
-        res.status(200).send(result);
+        res.status(result.status).send(result);
         })
         .catch(err => {
             res.status(err.status).send(err);
