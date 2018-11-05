@@ -18,18 +18,16 @@ router.get('/users', (req, res) => {
             res.status(200).send({errorMessage: "", responseData: response});
         })
     .catch(err => {
-        console.log('Error getting documents', err);
         res.status(500).send({errorMessage: err.message, responseData: ""});
     });
 });
 
-router.get('/users/:userID', async function(req, res){
-    getUser(req.params.userID).then( doc => {
-        res.status(200).send({errorMessage: "", responseData: doc});
-    })
+router.get('/users/:userID', async (req, res) => {
+    getUser(req.params.userID).then( result => {
+        res.status(200).send(result);
+        })
         .catch(err => {
-            console.log(err);
-            res.status(500).send({errorMessage: err, responseData: ""});
+            res.status(err.status).send(err);
         });
 });
 
@@ -50,14 +48,14 @@ async function getUser(userID)
         let retrievedUser = user.get()
             .then(doc => {
                 if(!doc.exists){
-                    reject("User does not exist in the database.");
+                    reject({status: 404, errorMessage: "User does not exist in the database.", responseData: ""});
                 }
                 else{
-                    resolve(doc.data());
+                    resolve({status: 200, errorMessage: "", responseData: doc.data()});
                 }
             })
             .catch(err => {
-                reject(err.message);
+                    reject({status: 500, errorMessage: "Internal Server Error.", responseData: ""});
             });
     });
 }
