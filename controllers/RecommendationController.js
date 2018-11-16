@@ -30,7 +30,7 @@ async function findNearbyUsers(userID)
                     var recommendations = [];
                     const geoQuery = geo.query({
                         center: userLoc,
-                        radius: user.Preferences.Proximity
+                        radius: user.preferences.proximity
                     });
                     geoQuery.on("key_entered", function(key, location, distance) {
                         getUser(key).then(user => {
@@ -40,7 +40,7 @@ async function findNearbyUsers(userID)
                     });
                     geoQuery.on("ready", function(){
                         geoQuery.cancel();
-                        recommendations = filterRecommendations(user.Preferences, recommendations);
+                        recommendations = filterRecommendations(userID, user.preferences, recommendations);
                         resolve(recommendations);
                     });
                 })
@@ -50,44 +50,39 @@ async function findNearbyUsers(userID)
         });
 }
 
-function filterRecommendations(preferences, nearbyUsers)
+function filterRecommendations(travellerID, preferences, nearbyUsers)
 {
-    var users =  nearbyUsers.filter(user => matchesPreferences(preferences, user));
+    var users =  nearbyUsers.filter(user => matchesPreferences(travellerID, preferences, user));
     users.slice(0, 100);
-    users.sort(user => user.Rating);
+    users.sort(user => user.rating);
     return users;
 }
 
-function matchesPreferences(preferences, user)
+function matchesPreferences(travellerID, preferences, user)
 {
-    if(user.Age < preferences.AgeMin || user.Age > preferences.AgeMax)
+    //prevent the traveller from getting themselves as a recommendation
+    if(user.userID == travellerID)
     {
         return false;
     }
-    if(preferences.Female && user.Gender == 'Female')
+    if(user.age < preferences.ageMin || user.age > preferences.ageMax)
+    {
+        return false;
+    }
+    if(preferences.female && user.gender == 'Female')
     {
         return true;
     }
-    if(preferences.Male && user.Gender == 'Male')
+    if(preferences.male && user.gender == 'Male')
     {
         return true;
     }
-    if(preferences.Other && user.Gender == 'Other')
+    if(preferences.other && user.gender == 'Other')
     {
         return true;
     }
     return false;
 }
-
-
-router.get('/test/:userID', (req, res) => {
-    geo.set(req.params.userID, { coordinates: new admin.firestore.GeoPoint(37.79, -122.41)})
-        .then(doc => {
-            res.status(200).send("Succeeded");
-        }, (error) => {
-            res.status(500).send({errorMessage: error, responseData: ""});
-        });
-});
 
 async function getUserLocation(userID)
 {
@@ -123,12 +118,12 @@ async function getUser(userID)
     });
 }
 
-
+//TODO: move constructors somewhere else
 function UserProfile(user) {
-    this.UserID = user.UserID;
-    this.Age = user.Age;
-    this.Gender = user.Gender;
-    this.Rating = user.Rating;
+    this.userID = user.userID;
+    this.age = user.age;
+    this.gender = user.gender;
+    this.rating = user.rating;
 }
 
 module.exports.router = router;

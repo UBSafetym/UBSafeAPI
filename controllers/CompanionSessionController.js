@@ -10,14 +10,22 @@ router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 var getUser = require('./RecommendationController').getUser;
 
-router.post('/companionsession/addWatcher/:sessionID', (req, res) => {
-    /*
-     * - Create the companion session
-     *   > get and store each watcher's device id
-     * - Send the invites
-     * - return the companion session id
-     */
-    //db.collection('companionSessions').add().then().catch();
+/*
+ * API Endpoint: PUT /companionsession/join/ + body
+ * {
+ *      "sessionID": string,
+ *      "watcherID": string
+ * }
+ */
+router.put('/companionsession/join', (req, res) => {
+    //db.collection('companion_sessions').add().then().catch();
+});
+
+/*
+ * API Endpoint: DELETE /companionsession/:sessionID
+ */
+router.delete('/companionsession/join', async (req, res) => {
+    //db.collection('companion_sessions').add().then().catch();
 });
 
 /*
@@ -49,7 +57,7 @@ async function createCompanionSession(session)
             //post the new companion session to the db
             var newSession = makeCompanionSession(traveller, session);
             console.log(newSession);
-            db.collection('companionSessions')
+            db.collection('companion_sessions')
                 .add(newSession)
                 .then(sessionRef => {
                     resolve({"id": sessionRef.id, "data": newSession});
@@ -121,30 +129,28 @@ function SessionInvite(deviceToken, session)
     }
 }
 
-//get the user object and format the traveller object
-//get the watchers and store their information correctly
 function makeCompanionSession(traveller, session)
 {
     var date = new Date();
-    var newSession = {};
-    newSession.traveller = makeTraveller(traveller);
-    newSession.travellerSource = session.travellerSource;
-    newSession.travellerDest = session.travellerDest;
-    newSession.travellerLoc = session.travellerLocation;
-    newSession.lastUpdated = date.getHours();
-    newSession.joinedWatchers = [];
+    var newSession = {
+        "traveller": makeTraveller(traveller),
+        "travellerSource": session.travellerSource,
+        "travellerDest": session.travellerDest,
+        "travellerLoc": session.travellerLocation,
+        "lastUpdated": session.lastUpdated,
+        "joinedWatchers": []
+
+    };
     return newSession;
 }
 
 function makeTraveller(traveller)
 {
-    var ret = {};
-    //console.log("Traveller:");
-    //console.log(traveller);
-    ret.id = traveller.UserID;
-    ret.name = traveller.UserName;
-    ret.deviceToken = traveller.DeviceToken;
-    return ret;
+    var newTraveller = {};
+    newTraveller.id = traveller.UserID;
+    newTraveller.name = traveller.UserName;
+    newTraveller.deviceToken = traveller.DeviceToken;
+    return newTraveller;
 }
 
 function Watcher(watcher)
@@ -154,41 +160,11 @@ function Watcher(watcher)
     this.deviceToken = watcher.deviceToken;
 }
 
-
 function Response(code, err, data)
 {
     this.status = code;
-    this.errorMessage = err.message;
-    this.responseData = data;
+    this.errorMessage = (err)? err.message: "";
+    this.responseData = (data)? data : "";
 }
 
 module.exports.router = router;
-
-
-/*
-{
-    "traveller": {
-        "userID": string,
-        "name": string,
-        "deviceToken": string
-        "source": geopoint,
-        "destination": geopoint
-    },
-    "joinedWatchers": [
-        "watcher1ID":{
-            "deviceToken": string,
-            "name": string
-        },
-        "watcher2ID":{
-            "deviceToken": string,
-            "name": string
-        },
-        "watcher2ID":{
-            "deviceToken": string,
-            "name": string
-        }
-    ]
-    "travellerLoc": geopoint,
-    "lastUpdated": datetime
-}
-*/
