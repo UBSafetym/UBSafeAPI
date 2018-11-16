@@ -1,15 +1,19 @@
 //dependencies
 var express = require('express');
 var admin = require('firebase-admin');
-var db = require('../db');
+var db = require('../db').db;
 //setup
 var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
+/*
+ * API Endpoint: GET /users
+ * - returns all users in the db
+ */
 router.get('/users', (req, res) => {
-    var response = [];
+    let response = [];
     const usersSnapshot = db.collection('users').get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
@@ -22,6 +26,10 @@ router.get('/users', (req, res) => {
     });
 });
 
+/*
+ * API Endpoint: GET /users/{userID}
+ * - returns user with id = {userID}
+ */
 router.get('/users/:userID', async (req, res) => {
     getUser(req.params.userID).then( result => {
         res.status(result.status).send(result);
@@ -31,9 +39,20 @@ router.get('/users/:userID', async (req, res) => {
         });
 });
 
+/*
+ * API Endpoint: PUT /users/{userID} + body
+ * - note that changes to a users preferences
+ *   must not be nested and must be denoted by
+ *   inserting a "Preferences.INSERT_PREFERENCE_HERE"
+ *   e.g.
+ *   {
+ *      "User Name": "Updated User Name",
+ *      "Preferences.MinAge": 20
+ *   }
+ */
 router.put('/users/:userID', (req, res) => {
     try{
-        var setPreference = db.collection('users').doc(req.params.userID).update(req.body);
+        let setPreference = db.collection('users').doc(req.params.userID).update(req.body);
         res.status(200).send({errorMessage: "", responseData: "User's preferences have been updated successfully."});
     }
     catch(err) {
@@ -41,6 +60,9 @@ router.put('/users/:userID', (req, res) => {
     }
 });
 
+/*
+ * Retrieves and returns a user from the db
+ */
 async function getUser(userID)
 {
     return new Promise((resolve, reject) => {
@@ -59,4 +81,6 @@ async function getUser(userID)
             });
     });
 }
-module.exports = router;
+
+module.exports.getUser = getUser;
+module.exports.router = router;

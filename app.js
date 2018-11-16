@@ -4,10 +4,15 @@ var express = require('express'); //import express
 var app = express();
 var db = require('./db');
 
-var UserController = require('./controllers/UserController');
-var RecommendationController = require('./controllers/RecommendationController');
+var UserController = require('./controllers/UserController').router;
+var RecommendationController = require('./controllers/RecommendationController').router;
+var CompanionSessionController = require('./controllers/CompanionSessionController').router;
+var AlertController = require('./controllers/AlertController').router;
+
 app.use('/', UserController);
 app.use('/', RecommendationController);
+app.use('/', CompanionSessionController);
+app.use('/', AlertController);
 
 //makes app object visible to the rest of the program
 //when we call for it using require()
