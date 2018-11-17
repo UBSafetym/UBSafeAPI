@@ -8,67 +8,41 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
-var getUser = require('./RecommendationController').getUser;
-
-
-const TERMINATED = 0;
-const REACHED_DESTINATION = 1;
-const MOVING_AWAY = 2;
-const ALARM_TRIGGERED = 3;
-const STAGNANT = 4;
-const CONNECTION_LOST = 5;
-const ALERT_NEARBY_USERS = 6;
+var Session = require('../models/companionsession');
+var Response = require('../models/response');
+var Alert = require('../models/alert');
 
 /*
- * param: CompanionSessionID
+ * body:
  * {
- *     "sessionID": string,
- *     "alarmType": number
+ *     "alertCode": number
  * }
  */
-router.post('/alert', (req, res) => {
-        /*
-         * TODO:
-         *      - retrieve watcher(s) from CompanionSession
-         *      - send notification to each watcher
-         */
-    console.log("Not yet implemented.");
-    res.status(500).send({errorMessage: "Not yet implemented", responseData: ""});
+router.post('/alert/:sessionID', (req, res) => {
+    Session.getSession(req.params.sessionID).then(session => {
+        let watcherTokens = [];
+        let message = Alert.createMessage(session.traveller.name, req.body.alertCode);
+        console.log(message);
+        let data = {alertCode: req.body.alertCode};
+        session.joinedWatchers.forEach(watcher => {
+            watcherTokens.push(watcher.deviceToken);
+        });
+        Alert.sendNotifications(watcherTokens, message, data).then(() => {
+            res.status(200).send(new Response(200, "", "Alert has been sent."));
+        }).catch(err => {
+            console.log(err);
+            res.status(500).send(new Response(500, err, ""));
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).send(new Response(500, err, ""));
+    });
 });
 
 /*
- * Retrieves and returns a companion session from the db
+ *
  */
-async function getCompanionSession(sessionID)
-{
-    return new Promise((resolve, reject) => {
-        let sessionRef = db.collection('companion_sessions').doc(sessionID);
-        let retrievedSession = sessionRef.get()
-            .then(session => {
-                if(!session.exists){
-                    reject("Cannot find session in the db.");
-                }
-                else{
-                    resolve(session.data());
-                }
-            })
-            .catch(err => {
-                    reject(err);
-            });
-    });
-}
-
-function Alert(deviceToken, message, session)
-{
-    this.to = deviceToken;
-    this.sound = 'default';
-    this.body = session.data.traveller.name + "has invited you to a Virtual Companion Session!";
-    this.data = {
-        "sessionID": session.id,
-        "travellerName": session.data.traveller.name,
-        "source": session.data.travellerSource,
-        "dest": session.data.travellerDest
-    }
-}
+router.post('/alert', (req, res) => {
+});
 
 module.exports.router = router;

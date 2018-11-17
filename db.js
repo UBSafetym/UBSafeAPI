@@ -12,9 +12,6 @@ admin.initializeApp({
 var db = admin.firestore();
 db.settings(settings);
 
-//const geo = geofirex.init(db);
-//console.log(geo);
-
 // Firebase reference where GeoFirestore will store its information
 const collectionRef = db.collection('user_locations');
 // Create a GeoFirestore index
