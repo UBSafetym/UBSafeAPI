@@ -1,38 +1,22 @@
 const geo = require('../db').geo;
-const admin = require('firebase-admin');
-const db = require('../db').db;
 const User = require('../models/user');
-const Recommendation = require('../models/recommendation');
+const Locate = require('../models/location');
 
 /* Retrieves a list of nearby users - asynchronous, returns a promise */
 async function getRecommendations(userID)
 {
-    return new Promise(async (resolve, reject) => {
-        getUserLocation(userID)
-            .then( userLoc => {
-                User.getUser(userID).then( user => {
-                    //we now have the user's coordinates and the user's preferred proximity
-                    var recommendations = [];
-                    const geoQuery = geo.query({
-                        center: userLoc,
-                        radius: user.preferences.proximity
-                    });
-                    geoQuery.on("key_entered", function(key, location, distance) {
-                        User.getUser(key).then(user => {
-                            let userProfile = new UserProfile(user);
-                            recommendations.push(userProfile);
-                        }).catch(err => reject(err));
-                    });
-                    geoQuery.on("ready", function(){
-                        geoQuery.cancel();
-                        recommendations = filterRecommendations(userID, user.preferences, recommendations);
-                        resolve(recommendations);
-                    });
-                })
-                .catch(err => reject(err));
-            })
-            .catch(err => reject(err));
-        });
+    try{
+        let user = await User.getUser(userID);
+        let userLoc = await Locate.getUserLocation(userID);
+        let userPref = user.preferences;
+        let nearbyUsers = await Locate.getNearbyUsers(userLoc, userPref.proximity);
+        let recs = filterRecommendations(userID, userPref, nearbyUsers);
+        return User.getUserProfiles(recs);
+    }
+    catch(err){
+        console.error(err);
+        throw new Error("Error getting user's recommended Companions.")
+    }
 }
 
 function filterRecommendations(travellerID, preferences, nearbyUsers)
@@ -67,25 +51,6 @@ function matchesPreferences(travellerID, preferences, user)
         return true;
     }
     return false;
-}
-
-async function getUserLocation(userID)
-{
-    return new Promise((resolve, reject) => {
-        geo.get(userID)
-            .then((userLoc) => {
-                if(userLoc === null) reject("Unable to locate user.");
-                else resolve(userLoc.coordinates);
-            })
-            .catch(err => reject(err))
-    });
-}
-
-function UserProfile(user) {
-    this.userID = user.userID;
-    this.age = user.age;
-    this.gender = user.gender;
-    this.rating = user.rating;
 }
 
 module.exports.getRecommendations = getRecommendations;

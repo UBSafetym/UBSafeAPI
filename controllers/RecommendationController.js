@@ -4,7 +4,7 @@ const Response = require('../models/response');
 const Recommendation = require('../models/recommendation');
 
 /*
- * API Endpoint: GET /recommendations/{userID}
+ * API Endpoint: GET /recommendations/:userID
  * - returns a list of user profiles that match the user's preferences
  */
 router.get('/recommendations/:userID', async (req, res) => {

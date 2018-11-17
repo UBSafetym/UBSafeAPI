@@ -1,48 +1,65 @@
 //dependencies
-var Expo = require('expo-server-sdk').Expo;
-var express = require('express');
-var admin = require('firebase-admin');
-var db = require('../db').db;
+const express = require('express');
+const Session = require('../models/companionsession');
+const Response = require('../models/response');
+const Alert = require('../models/alert');
+const Locate = require('../models/location');
+const User = require('../models/user')
 //setup
-var router = express.Router();
-var bodyParser = require('body-parser');
+const router = express.Router();
+const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
-var Session = require('../models/companionsession');
-var Response = require('../models/response');
-var Alert = require('../models/alert');
 
-/*
+/* SEND ALERT @body.alertCode TO ALL WATCHERS IN A COMPANION SESSION
+ *
+ * API Endpoint: /alert/:sessionID
  * body:
  * {
  *     "alertCode": number
  * }
+ * responseData: "Alert has been sent."
  */
-router.post('/alert/:sessionID', (req, res) => {
-    Session.getSession(req.params.sessionID).then(session => {
-        let watcherTokens = [];
-        let message = Alert.createMessage(session.traveller.name, req.body.alertCode);
-        console.log(message);
-        let data = {alertCode: req.body.alertCode};
-        session.joinedWatchers.forEach(watcher => {
-            watcherTokens.push(watcher.deviceToken);
-        });
-        Alert.sendNotifications(watcherTokens, message, data).then(() => {
-            res.status(200).send(new Response(200, "", "Alert has been sent."));
-        }).catch(err => {
-            console.log(err);
-            res.status(500).send(new Response(500, err, ""));
-        });
-    }).catch(err => {
+router.post('/alert/:sessionID', async (req, res) => {
+    try {
+        let session = await Session.getSession(req.params.sessionID);
+        let addMsgData = {"sessionID": req.params.sessionID};
+        let message = Alert.createMessage(session.traveller.name, req.body.alertCode, addMsgData);
+        let watcherTokens = User.getDeviceTokens(session.joinedWatchers);
+        await Alert.sendNotifications(watcherTokens, message);
+        res.status(200).send(new Response(200, "", "Alert has been sent."));
+    }
+    catch(err) {
         console.log(err);
         res.status(500).send(new Response(500, err, ""));
-    });
+    }
 });
 
-/*
- *
+/* SEND ALERT @body.alertCode TO ALL USERS NEARBY @body.userID
+ * body:
+ * {
+ *     "userID": string
+ *     "alertCode": number
+ * }
+ * responseData: "Alert has been sent"
  */
-router.post('/alert', (req, res) => {
+router.post('/alert', async (req, res) => {
+    try
+    {
+        let user = await User.getUser(req.body.userID);
+        let userLoc = await Locate.getUserLocation(user.userID);
+        let nearbyUsers = await Locate.getNearbyUsers(userLoc, user.preferences.proximity);
+        let addMsgData = {"userName": user.userName, "userLoc": userLoc};
+        let message = Alert.createMessage(user.userName, req.body.alertCode, addMsgData);
+        let tokens = User.getDeviceTokens(nearbyUsers);
+        await Alert.sendNotifications(tokens, message);
+        res.status(200).send(new Response(200, "", "Alert has been sent."));
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send(new Response(500, err, ""));
+    }
 });
 
 module.exports.router = router;

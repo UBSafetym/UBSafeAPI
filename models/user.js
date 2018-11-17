@@ -1,5 +1,4 @@
-var admin = require('firebase-admin');
-var db = require('../db').db;
+const db = require('../db').db;
 
 module.exports = {
     "getUser": async function(userID)
@@ -30,6 +29,28 @@ module.exports = {
             return avg;
         }
         return -1;
+    },
+    "getUserProfiles": function(users)
+    {
+        let profiles = [];
+        users.forEach(u => {
+            profiles.push(new UserProfile(u));
+        });
+        return profiles;
+    },
+    "getDeviceTokens": function(users)
+    {
+        let tokens = [];
+        users.forEach(u => {
+            tokens.push(u.deviceToken);
+        });
+        return tokens;
     }
+}
 
+function UserProfile(user) {
+    this.userID = user.userID;
+    this.age = user.age;
+    this.gender = user.gender;
+    this.rating = user.rating;
 }

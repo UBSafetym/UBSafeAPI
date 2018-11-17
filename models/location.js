@@ -1,45 +1,41 @@
 const geo = require('../db').geo;
-const admin = require('firebase-admin');
 const db = require('../db').db;
 const User = require('../models/user');
 
-async function getNearbyUsers(userID)
+/* Returns a list of users nearby a given geopoint and proximity*/
+async function getNearbyUsers(loc, proximity)
 {
-    try{
-        let loc = await getUserLocation(userID);
-        let user = await User.getUser(userID);
-
+    return new Promise((resolve, reject) => {
         const geoQuery = geo.query({
             center: loc,
-            radius: user.preferences.proximity
+            radius: proximity
         });
-
-        let nearbyUsers = [];
+        var nearbyUsers = [];
+        let user;
         geoQuery.on("key_entered", async function(key, location, distance) {
-            let user = await User.getUser(key);
-            let userProfile = new UserProfile(user);
-            nearbyUsers.push(userProfile);
+            user = User.getUser(key).then(user => {
+                nearbyUsers.push(user);
+            }).catch(err => {reject(err);});
         });
 
         geoQuery.on("ready", function(){
             geoQuery.cancel();
-            return nearbyUsers;
+            resolve(nearbyUsers);
         });
-    }
-    catch(err){
-        return err;
-    }
-
-}
-
-async function getUserLocation(userID)
-{
-    return new Promise((resolve, reject) => {
-        geo.get(userID)
-            .then((userLoc) => {
-                if(userLoc === null) reject("Unable to locate user.");
-                else resolve(userLoc.coordinates);
-            })
-            .catch(err => reject(err))
     });
 }
+
+/* given a userID, returns the user's location & preferred proximity*/
+async function getUserLocation(userID)
+{
+    try{
+        let userLoc = await geo.get(userID);
+        return userLoc.coordinates;
+    }
+    catch(err){
+        throw new Error("Could not find user's location.");
+    }
+}
+
+module.exports.getUserLocation = getUserLocation;
+module.exports.getNearbyUsers = getNearbyUsers;

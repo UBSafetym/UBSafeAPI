@@ -14,7 +14,35 @@ var Response = require('../models/response');
 var Alert = require('../models/alert');
 var Session = require('../models/companionsession');
 
-/*
+/* CREATE A COMPANION SESSION & SEND INVITES TO THE SESSION:
+ *
+ * API Endpoint: POST /companionsession + body:
+ * {
+ *     "travellerID": INSERT_TRAVELLERS_USERID,
+ *     "watcherIDs": [ARRAY_OF_WATCHER_USERIDS],
+ *     "travellerDest": geopoint,
+ *     "travellerSource": geopoint,
+ *     "travellerLocation": geopoint,
+ *     "lastUpdated": dateTime
+ * }
+ */
+router.post('/companionsession', async (req, res) => {
+    try{
+        let session = await Session.createSession(req.body);
+        console.log(session);
+        let message = Alert.createMessage(session.data.traveller.name, Alert.INVITED_TO_SESSION, session);
+        let tokens = await Session.getWatcherTokensFromIDs(req.body.watcherIDs);
+        await Alert.sendNotifications(tokens, message);
+        res.status(200).send(new Response(200, "", "Session has been created."))
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send(new Response(500, err, ""));
+    }
+});
+
+/* JOIN A COMPANION SESSION:
+ *
  * API Endpoint: PUT /companionsession/join/ + body
  * {
  *      "sessionID": string,
@@ -24,23 +52,25 @@ var Session = require('../models/companionsession');
 router.put('/companionsession/join', async (req, res) => {
     try{
         let watcher = await User.getUser(req.body.watcherID);
-        let newWatcher = makeWatcher(watcher);
+        let newWatcher = Session.makeSessionProfile(watcher);
 
         let sessionRef = db.collection('companion_sessions').doc(req.body.sessionID);
         await sessionRef.update({joinedWatchers: admin.firestore.FieldValue.arrayUnion(newWatcher)});
 
         let session = await Session.getSession(req.body.sessionID);
         let travellerToken = [session.traveller.deviceToken];
-        let body = watcher.userName + " has joined the Companion Session!";
-        await Alert.sendNotifications(travellerToken, body, "");
-        res.status(200).send(new Response(200, "", body));
+        let message = Alert.createMessage(watcher.userName, Alert.JOINED_SESSION);
+        await Alert.sendNotifications(travellerToken, message);
+        res.status(200).send(new Response(200, "", "Successfully joined session!"));
     }
     catch(err){
+        console.log(err);
         res.status(500).send(new Response(500, err, ""));
     }
 });
 
-/*
+/* DELETE A COMPANION SESSION:
+ *
  * API Endpoint: DELETE /companionsession/:sessionID
  */
 router.delete('/companionsession/:sessionID', async (req, res) => {
@@ -55,30 +85,9 @@ router.delete('/companionsession/:sessionID', async (req, res) => {
     }
 });
 
-/*
- * API Endpoint: POST /companionsession + body:
- * {
- *     "travellerID": INSERT_TRAVELLERS_USERID,
- *     "watcherIDs": [ARRAY_OF_WATCHER_USERIDS],
- *     "travellerDest": geopoint,
- *     "travellerSource": geopoint,
- *     "travellerLocation": geopoint,
- *     "lastUpdated": dateTime
- * }
- */
-router.post('/companionsession', async (req, res) => {
-    try{
-        let session = await Session.createSession(req.body);
-        await Session.sendInvites(req.body.watcherIDs, session);
-        res.status(200).send(new Response(200, "", session));
-    }
-    catch(err){
-        console.log(err);
-        res.status(500).send(new Response(500, err, ""));
-    }
-});
 
-/*
+/* RATE A COMPANION SESSION:
+ *
  * API Endpoint: POST /companionsession/:sessionID/rate + body:
  * {
  *     "rating": number between 0 and 5
