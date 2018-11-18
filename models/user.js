@@ -50,6 +50,7 @@ module.exports = {
 
 function UserProfile(user) {
     this.userID = user.userID;
+    this.userName = user.userName;
     this.age = user.age;
     this.gender = user.gender;
     this.rating = user.rating;
