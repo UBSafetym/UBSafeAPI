@@ -2,7 +2,6 @@
 
 var express = require('express'); //import express
 var app = express();
-var db = require('./db');
 
 var UserController = require('./controllers/UserController').router;
 var RecommendationController = require('./controllers/RecommendationController').router;

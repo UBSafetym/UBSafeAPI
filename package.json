@@ -21,8 +21,8 @@
   "version": "1.0.0",
   "description": "A virtual safewalk application targeting the University of British Columbia",
   "devDependencies": {
-    "firebase-mock": "^2.2.10",
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "mock-cloud-firestore": "^0.8.2"
   },
   "repository": {
     "type": "git",

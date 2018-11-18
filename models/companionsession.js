@@ -1,4 +1,4 @@
-const db = require('../db').db;
+const db = require('../db');
 const User = require('../models/user');
 
 function makeCompanionSession(traveller, session)

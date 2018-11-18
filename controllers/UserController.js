@@ -1,7 +1,7 @@
 //dependencies
 var express = require('express');
 var admin = require('firebase-admin');
-var db = require('../db').db;
+var db = require('../db');
 var User = require('../models/user');
 var Response = require('../models/response');
 //setup

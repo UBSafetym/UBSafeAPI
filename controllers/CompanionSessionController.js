@@ -2,7 +2,7 @@
 var Expo = require('expo-server-sdk').Expo;
 var express = require('express');
 var admin = require('firebase-admin');
-var db = require('../db').db;
+var db = require('../db');
 var router = express.Router();
 
 var bodyParser = require('body-parser');

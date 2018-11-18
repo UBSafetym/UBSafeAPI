@@ -1,7 +1,7 @@
 //dependencies
 const express = require('express');
 const admin = require('firebase-admin');
-const db = require('../db').db;
+const db = require('../db');
 const geo = require('../db').geo;
 //setup
 const router = express.Router();

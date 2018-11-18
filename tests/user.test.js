@@ -1,5 +1,38 @@
 
+jest.mock('../db.js', () => {
+    const fixtureData = {
+         __collection__: {
+        users: {
+          }
+        },
+         __collection__: {
+        users_location: {
+          }
+        },
+         __collection__: {
+        companion_sessions: {
+          }
+        }
+      }
+    const MockFirebase = require('mock-cloud-firestore');
+    const db = new MockFirebase(fixtureData).firestore();
+    return db;
+});
+
 const User = require('../models/user');
+
+it('gets an existing user', async () => {
+    var testUser = {
+        age: 15,
+        username: 'user_a'
+    };
+    let newUser = await User.db.collection('users').doc('testUser').set(testUser);
+    return await User.getUser('testUser').then(user => {expect(user).toEqual(testUser)});
+})
+
+it('returns error when trying to get non-existant user', async () => {
+    return await User.getUser('non-existantUser').then().catch(err => {expect(err).toEqual(new Error('Cannot find user in the database.'))});
+})
 
 test("gets a user's average rating from filled array", () => {
     let ratings = [0, 0, 1, 2, 3, 4, 5];
@@ -14,8 +47,8 @@ test("gets a user's average rating from empty array", () => {
 test("produces an array of deviceTokens when given array of users", () => {
     let testUsers = [
         {
-            "deviceToken": "ExponentPushToken[IHPfmxEp_y9mPS2GLki5nC]",
-            "userName": "Agmel Womg",
+            "deviceToken": "JonDeviceToken",
+            "userName": "Jon Smith",
             "userID": "10157425230694386",
             "gender": "Male",
             "age": 21,
@@ -41,7 +74,7 @@ test("produces an array of deviceTokens when given array of users", () => {
                 "other": true,
                 "ageMax": 55
             },
-            "deviceToken": "ExponentPushToken[Z6NnYfK2C1vtqH-TsDkWT1]",
+            "deviceToken": "CormacDeviceToken",
             "userName": "Cormac Mollitor",
             "ratingHistory": [
                 0,
@@ -101,7 +134,7 @@ test("produces an array of deviceTokens when given array of users", () => {
             "deviceToken": "TestUserDeviceToken"
         }
     ];
-    let tokens = ["ExponentPushToken[IHPfmxEp_y9mPS2GLki5nC]", "ExponentPushToken[Z6NnYfK2C1vtqH-TsDkWT1]", "LisaDeviceToken", "TestUserDeviceToken"];
+    let tokens = ["JonDeviceToken", "CormacDeviceToken", "LisaDeviceToken", "TestUserDeviceToken"];
     expect(User.getDeviceTokens(testUsers)).toEqual(tokens);
 });
 
@@ -136,6 +169,3 @@ test("produces an array of profiles when given an array of users", () => {
     expect(User.getUserProfiles(userArr).length).toBe(1);
     expect(User.getUserProfiles(userArr)[0]).toEqual(profile);
 });
-
-
-
