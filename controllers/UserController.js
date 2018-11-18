@@ -53,13 +53,27 @@ router.get('/users/:userID', async (req, res) => {
  *   }
  */
 router.put('/users/:userID', async (req, res) => {
-    var userRef = db.collection('users').doc(req.params.userID);
-    userRef.update(req.body).then(dbRes => {
-        console.log(dbRes);
-        res.status(200).send(new Response(200, "", "User has been updated."));
-    }).catch(err =>{
-         res.status(500).send(new Response(500, err.message, ""));
-    });
+    let body = req.body;
+    for(var propName in body)
+    {
+        if(body[propName] === null || body[propName] === undefined)
+        {
+            delete body[propName];
+        }
+    }
+    if(Object.keys(body).length === 0 && body.constructor === Object)
+    {
+        res.status(200).send(new Response(200, "", "No updates were sent."));
+    }
+    else{
+        var userRef = db.collection('users').doc(req.params.userID);
+        userRef.update(body).then(dbRes => {
+            console.log(dbRes);
+            res.status(200).send(new Response(200, "", "User has been updated."));
+        }).catch(err =>{
+             res.status(500).send(new Response(500, err.message, ""));
+        });
+    }
 });
 
 module.exports.router = router;

@@ -57,7 +57,16 @@ router.get('/users/:userID', async (req, res) => {
  */
 router.put('/users/:userID', (req, res) => {
     try{
-        let setPreference = db.collection('users').doc(req.params.userID).update(req.body);
+        let updates = req.body;
+        for(var propName in updates)
+        {
+            console.log(updates[propName]);
+            if(updates[propName] === null || updates[propName] === undefined)
+            {
+                delete updates[propName];
+            }
+        }
+        let setPreference = db.collection('users').doc(req.params.userID).update(updates);
         res.status(200).send({errorMessage: "", responseData: "User's preferences have been updated successfully."});
     }
     catch(err) {
