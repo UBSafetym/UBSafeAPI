@@ -33,7 +33,7 @@ router.post('/companionsession', async (req, res) => {
         let message = Alert.createMessage(session.data.traveller.name, Alert.INVITED_TO_SESSION, session);
         let tokens = await Session.getWatcherTokensFromIDs(req.body.watcherIDs);
         await Alert.sendNotifications(tokens, message);
-        res.status(200).send(new Response(200, "", "Session has been created."))
+        res.status(200).send(new Response(200, "", session))
     }
     catch(err){
         console.log(err);
