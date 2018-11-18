@@ -36,6 +36,7 @@ router.post('/companionsession', async (req, res) => {
         res.status(200).send(new Response(200, "", session))
     }
     catch(err){
+        console.log("POST COMPANIONSESSION FAILED:");
         console.log(err);
         res.status(500).send(new Response(500, err, ""));
     }
@@ -95,13 +96,23 @@ router.delete('/companionsession/:sessionID', async (req, res) => {
  */
 router.post('/companionsession/:sessionID/rate', async (req, res) => {
     try {
+        let rating = req.body.rating;
+        if(isNaN(rating) || rating > 5 || rating < 0)
+        {
+            res.status(404).send(new Response(404, new Error("Invalid rating."), ""));
+            return;
+        }
         let session = await Session.getSession(req.params.sessionID);
         session.joinedWatchers.forEach(async (watcher) => {
-            let user = await User.getUser(watcher.id);
-            user.ratingHistory.push(req.body.rating);
-            user.rating = User.getAvgRating(user.ratingHistory);
-            console.log(user);
-            await db.collection('users').doc(user.userID).update(user);
+                let user = await User.getUser(watcher.id);
+                if(!user.ratingHistory)
+                {
+                    user.ratingHistory = [];
+                }
+                user.ratingHistory.push(req.body.rating);
+                user.rating = User.getAvgRating(user.ratingHistory);
+                console.log(user);
+                await db.collection('users').doc(user.userID).update(user);
         });
         res.status(200).send(new Response(200, "", session));
     }

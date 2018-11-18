@@ -17,7 +17,7 @@ async function sendNotifications(tokens, msg)
     return new Promise((resolve, reject) => {
         if(notifications.length == 0)
         {
-            reject("Invalid device token.");
+            reject(new Error("Invalid device token."));
         }
         let expo = new Expo();
         let chunks = expo.chunkPushNotifications(notifications);
