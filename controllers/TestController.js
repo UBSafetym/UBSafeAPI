@@ -1,10 +1,11 @@
 //dependencies
-var express = require('express');
-var admin = require('firebase-admin');
-var db = require('../db').db;
+const express = require('express');
+const admin = require('firebase-admin');
+const db = require('../db').db;
+const geo = require('../db').geo;
 //setup
-var router = express.Router();
-var bodyParser = require('body-parser');
+const router = express.Router();
+const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
@@ -24,7 +25,7 @@ router.post('/test/users', (req, res) => {
     });
 });
 
-router.post('/test/userLoc', (req, res) => {
+router.post('/test/userLoc/:userID', (req, res) => {
     geo.set(req.params.userID, { coordinates: new admin.firestore.GeoPoint(37.79, -122.41)})
         .then(doc => {
             res.status(200).send("Succeeded");
