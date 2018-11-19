@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1542539593064" clover="3.2.0">
-  <project timestamp="1542539593064" name="All files">
-    <metrics statements="27" coveredstatements="27" conditionals="4" coveredconditionals="4" methods="8" coveredmethods="8" elements="39" coveredelements="39" complexity="0" loc="27" ncloc="27" packages="1" files="1" classes="1">
-      <file name="user.js" path="C:\Users\Lisa\repos\UBSafe-Backend\models\user.js">
-        <metrics statements="27" coveredstatements="27" conditionals="4" coveredconditionals="4" methods="8" coveredmethods="8"/>
+<coverage generated="1542603476171" clover="3.2.0">
+  <project timestamp="1542603476172" name="All files">
+    <metrics statements="46" coveredstatements="34" conditionals="4" coveredconditionals="4" methods="15" coveredmethods="10" elements="65" coveredelements="48" complexity="0" loc="46" ncloc="46" packages="1" files="2" classes="2">
+      <file name="location.js" path="C:\Users\Marshall\Desktop\321\UBSafeAPI\models\location.js">
+        <metrics statements="19" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+      </file>
+      <file name="user.js" path="C:\Users\Marshall\Desktop\321\UBSafeAPI\models\user.js">
+        <metrics statements="27" coveredstatements="27" conditionals="4" coveredconditionals="4" methods="8" coveredmethods="8"/>
+        <line num="1" count="2" type="stmt"/>
         <line num="5" count="2" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
         <line num="7" count="2" type="cond" truecount="2" falsecount="0"/>
@@ -17,20 +39,20 @@
         <line num="24" count="1" type="stmt"/>
         <line num="25" count="1" type="stmt"/>
         <line num="27" count="1" type="stmt"/>
-        <line num="32" count="2" type="stmt"/>
-        <line num="33" count="2" type="stmt"/>
+        <line num="32" count="4" type="stmt"/>
+        <line num="33" count="4" type="stmt"/>
         <line num="34" count="2" type="stmt"/>
-        <line num="36" count="2" type="stmt"/>
-        <line num="41" count="1" type="stmt"/>
-        <line num="42" count="1" type="stmt"/>
+        <line num="36" count="4" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
         <line num="43" count="4" type="stmt"/>
-        <line num="45" count="1" type="stmt"/>
+        <line num="45" count="2" type="stmt"/>
         <line num="49" count="2" type="stmt"/>
         <line num="50" count="2" type="stmt"/>
         <line num="51" count="2" type="stmt"/>
         <line num="52" count="2" type="stmt"/>
         <line num="53" count="2" type="stmt"/>
-        <line num="56" count="1" type="stmt"/>
+        <line num="56" count="2" type="stmt"/>
       </file>
     </metrics>
   </project>
