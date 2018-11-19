@@ -1,3 +1,4 @@
+const firebase = require('firebase');
 jest.mock('../db.js', () => {
     const fixtureData = {
          __collection__: {
@@ -6,7 +7,7 @@ jest.mock('../db.js', () => {
         },
          __collection__: {
         users_location: {
-            
+
           }
         },
          __collection__: {
@@ -14,8 +15,12 @@ jest.mock('../db.js', () => {
           }
         }
       }
+    const GeoFirestore = require('geofirestore').GeoFirestore;
     const MockFirebase = require('mock-cloud-firestore');
     const db = new MockFirebase(fixtureData).firestore();
+    const collectionRef = db.collection('users_location');
+    db.geo = new GeoFirestore(collectionRef);
+
     return db;
 });
 
@@ -23,7 +28,7 @@ const User = require('../models/user');
 const Location = require('../models/location');
 
 describe('location.js tests', function () {
-    it('getNearbyUsers() Success', async () => {
+    it('gets nearby users', async () => {
         let testUsers = [
             {
                 "userName": "Changed Test User",
@@ -80,15 +85,18 @@ describe('location.js tests', function () {
         };
         var testUserLocation = {
             "d": {
-                "coordinates": [37.79, -122.41]
+                "coordinates": new firebase.firestore.GeoPoint(37.79, -122.41)
             },
             "g": "9p8yyrry8q",
-            "l": [37.79, -122.41]
+            "l": new firebase.firestore.GeoPoint(37.79, -122.41)
         };
-        var loc = [37.79, -122.41];
+        var testUserLoc = new firebase.firestore.GeoPoint(37.79, -122.41);
+        var loc = {coordinates: new firebase.firestore.GeoPoint(37.79, -122.41)};
         var proximity = 5;
         let newUser = await User.db.collection('users').doc('testUser').set(testUser);
-        let newUserLocation = await User.db.collection('user_locations').doc('testUser').set(testUserLocation);
-        return await Location.getNearbyUsers(loc, proximity).then(users => {expect(users).toEqual(testUsers)});
+        let newUserLocation = await User.db.geo.set('testUser', loc);
+        return Location.getNearbyUsers(testUserLoc, proximity).then(users => {
+            expect(users).toEqual(testUsers)
+        }).catch(err => {console.log(err);});
     })
 });
