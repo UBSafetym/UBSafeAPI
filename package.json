@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage --verbose"
   },
   "name": "ubsafe-backend",
   "version": "1.0.0",
