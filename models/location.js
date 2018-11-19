@@ -1,5 +1,5 @@
+const db = require('../db');
 const geo = require('../db').geo;
-const db = require('../db').db;
 const User = require('../models/user');
 
 /* Returns a list of users nearby a given geopoint and proximity*/

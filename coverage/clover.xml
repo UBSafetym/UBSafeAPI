@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1542608224031" clover="3.2.0">
-  <project timestamp="1542608224032" name="All files">
-    <metrics statements="46" coveredstatements="37" conditionals="4" coveredconditionals="4" methods="15" coveredmethods="10" elements="65" coveredelements="51" complexity="0" loc="46" ncloc="46" packages="1" files="2" classes="2">
+<coverage generated="1542609351323" clover="3.2.0">
+  <project timestamp="1542609351323" name="All files">
+    <metrics statements="46" coveredstatements="40" conditionals="4" coveredconditionals="4" methods="15" coveredmethods="11" elements="65" coveredelements="55" complexity="0" loc="46" ncloc="46" packages="1" files="2" classes="2">
       <file name="location.js" path="C:\Users\Lisa\repos\UBSafe-Backend\models\location.js">
-        <metrics statements="19" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="2"/>
+        <metrics statements="19" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -17,9 +17,9 @@
         <line num="21" count="1" type="stmt"/>
         <line num="22" count="0" type="stmt"/>
         <line num="23" count="0" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="33" count="0" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
         <line num="36" count="0" type="stmt"/>
         <line num="40" count="1" type="stmt"/>
         <line num="41" count="1" type="stmt"/>
