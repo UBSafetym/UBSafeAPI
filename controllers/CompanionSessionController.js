@@ -32,7 +32,7 @@ router.post('/companionsession', async (req, res) => {
         console.log(session);
         let message = Alert.createMessage(session.data.traveller.name, Alert.INVITED_TO_SESSION, session);
         let tokens = await Session.getWatcherTokensFromIDs(req.body.watcherIDs);
-        await Alert.sendNotifications(tokens, message);
+        Alert.sendNotifications(tokens, message);
         res.status(200).send(new Response(200, "", session))
     }
     catch(err){
@@ -61,7 +61,7 @@ router.put('/companionsession/join', async (req, res) => {
         let session = await Session.getSession(req.body.sessionID);
         let travellerToken = [session.traveller.deviceToken];
         let message = Alert.createMessage(watcher.userName, Alert.JOINED_SESSION);
-        await Alert.sendNotifications(travellerToken, message);
+        Alert.sendNotifications(travellerToken, message);
         res.status(200).send(new Response(200, "", "Successfully joined session!"));
     }
     catch(err){
