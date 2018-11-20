@@ -1,21 +1,6 @@
 
 jest.mock('../db.js', () => {
-    const fixtureData = {
-         __collection__: {
-        users: {
-          }
-        },
-         __collection__: {
-        users_location: {
-          }
-        },
-         __collection__: {
-        companion_sessions: {
-          }
-        }
-      }
-    const MockFirebase = require('mock-cloud-firestore');
-    const db = new MockFirebase(fixtureData).firestore();
+    const db = require('./test_db');
     return db;
 });
 
@@ -27,8 +12,8 @@ describe('user.js tests', function () {
             age: 15,
             username: 'user_a'
         };
-        let newUser = await User.db.collection('users').doc('testUser').set(testUser);
-        return await User.getUser('testUser').then(user => {expect(user).toEqual(testUser)});
+        let newUser = await User.db.collection('users').doc('getUserTest').set(testUser);
+        return await User.getUser('getUserTest').then(user => {expect(user).toEqual(testUser)});
     })
 
     it('getUser() Failure', async () => {
@@ -145,7 +130,7 @@ describe('user.js tests', function () {
         expect(User.getDeviceTokens(testUsers)).toEqual(tokens);
     });
 
-    
+
     test("getUserProfiles() Success", () => {
         let testUser = {
             "ratingHistory":[1,3,2,4,7,5,0,5],
@@ -177,7 +162,7 @@ describe('user.js tests', function () {
         expect(User.getUserProfiles(userArr).length).toBe(1);
         expect(User.getUserProfiles(userArr)[0]).toEqual(profile);
     });
-    
+
     test("getUserProfiles() Failure", () => {
         let userArr = [];
         expect(User.getUserProfiles(userArr).length).toBe(0);

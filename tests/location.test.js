@@ -1,29 +1,11 @@
+
+
 jest.mock('../db.js', () => {
-    const fixtureData = {
-         __collection__: {
-        users: {
-          }
-        },
-         __collection__: {
-        users_location: {
-
-          }
-        },
-         __collection__: {
-        companion_sessions: {
-          }
-        }
-      }
-    const GeoFirestore = require('geofirestore').GeoFirestore;
-    const MockFirebase = require('mock-cloud-firestore');
-    const db = new MockFirebase(fixtureData).firestore();
-    const collectionRef = db.collection('users_location');
-    db.geo = new GeoFirestore(collectionRef);
-
+    const db = require('./test_db');
     return db;
 });
 
-const firebase = require('firebase');
+const firebase = require('firebase-admin');
 const User = require('../models/user');
 const Location = require('../models/location');
 
@@ -31,16 +13,7 @@ describe('location.js tests', function () {
     it('getNearbyUsers() Success', async () => {
         let testUsers = [{
             "userName": "Changed Test User",
-            "ratingHistory": [
-                1,
-                3,
-                2,
-                4,
-                7,
-                5,
-                0,
-                5
-            ],
+            "ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
             "userID": "testID",
             "gender": "Other",
             "rating": 3.375,
@@ -55,35 +28,28 @@ describe('location.js tests', function () {
             },
             "deviceToken": "TestUserDeviceToken"
         }];
+        var testUserLoc = new firebase.firestore.GeoPoint(37.79, -122.41);
         var loc = {
             coordinates: new firebase.firestore.GeoPoint(37.79, -122.41)
         };
         let newUser = await User.db.collection('users').doc('testUser').set(testUsers[0]);
         let newUserLocation = await User.db.geo.set('testUser', loc);
-        return await Location.getNearbyUsers(loc, 5).then(users => {expect(users).toEqual(testUsers)});
+        return await Location.getNearbyUsers(testUserLoc, 5).then(users => {expect(users).toEqual(testUsers)});
     });
-    
+
     it('getNearbyUsers() Failure', async () => {
+        var testUserLoc = new firebase.firestore.GeoPoint(37.79, -122.41);
         var loc = {
             coordinates: new firebase.firestore.GeoPoint(37.79, -122.41)
         };
         let newUserLocation = await User.db.geo.set('testUser', loc);
-        return Location.getNearbyUsers(loc, 5).then().catch(err => {console.log(err);});
+        return Location.getNearbyUsers(testUserLoc, 5).then().catch();
     });
-    
+
     it("getUserLocation() Success", async () => {
         var testUser = {
             "userName": "Changed Test User",
-            "ratingHistory": [
-                1,
-                3,
-                2,
-                4,
-                7,
-                5,
-                0,
-                5
-            ],
+            "ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
             "userID": "testID",
             "gender": "Other",
             "rating": 3.375,
@@ -114,7 +80,7 @@ describe('location.js tests', function () {
             expect(res).toEqual(testUserLoc);
         });
     });
-    
+
     it("getUserLocation() Failure", async () => {
         return await Location.getUserLocation('non-existantUser').then().catch(err => { expect(err).toEqual( new Error("Could not find user's location.") ) });
     });

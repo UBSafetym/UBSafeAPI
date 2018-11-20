@@ -1,59 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1542619401680" clover="3.2.0">
-  <project timestamp="1542619401680" name="All files">
-    <metrics statements="46" coveredstatements="38" conditionals="4" coveredconditionals="4" methods="15" coveredmethods="11" elements="65" coveredelements="53" complexity="0" loc="46" ncloc="46" packages="1" files="2" classes="2">
-      <file name="location.js" path="C:\Users\Marshall\Desktop\321\UBSafeAPI\models\location.js">
-        <metrics statements="19" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="3"/>
-        <line num="1" count="1" type="stmt"/>
-        <line num="2" count="1" type="stmt"/>
-        <line num="3" count="1" type="stmt"/>
-        <line num="8" count="2" type="stmt"/>
-        <line num="9" count="2" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="31" count="2" type="stmt"/>
-        <line num="32" count="2" type="stmt"/>
-        <line num="33" count="2" type="stmt"/>
-        <line num="36" count="1" type="stmt"/>
-        <line num="40" count="1" type="stmt"/>
-        <line num="41" count="1" type="stmt"/>
-      </file>
-      <file name="user.js" path="C:\Users\Marshall\Desktop\321\UBSafeAPI\models\user.js">
-        <metrics statements="27" coveredstatements="27" conditionals="4" coveredconditionals="4" methods="8" coveredmethods="8"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="7" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="9" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="14" count="1" type="stmt"/>
-        <line num="20" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="22" count="1" type="stmt"/>
-        <line num="23" count="6" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="25" count="1" type="stmt"/>
-        <line num="27" count="1" type="stmt"/>
-        <line num="32" count="4" type="stmt"/>
-        <line num="33" count="4" type="stmt"/>
-        <line num="34" count="2" type="stmt"/>
-        <line num="36" count="4" type="stmt"/>
-        <line num="41" count="2" type="stmt"/>
-        <line num="42" count="2" type="stmt"/>
-        <line num="43" count="4" type="stmt"/>
-        <line num="45" count="2" type="stmt"/>
-        <line num="49" count="2" type="stmt"/>
-        <line num="50" count="2" type="stmt"/>
-        <line num="51" count="2" type="stmt"/>
-        <line num="52" count="2" type="stmt"/>
-        <line num="53" count="2" type="stmt"/>
-        <line num="56" count="2" type="stmt"/>
-      </file>
+<coverage generated="1542692872391" clover="3.2.0">
+  <project timestamp="1542692872391" name="All files">
+    <metrics statements="58" coveredstatements="57" conditionals="4" coveredconditionals="4" methods="15" coveredmethods="14" elements="77" coveredelements="75" complexity="0" loc="58" ncloc="58" packages="2" files="3" classes="3">
+      <package name="models">
+        <metrics statements="46" coveredstatements="45" conditionals="4" coveredconditionals="4" methods="15" coveredmethods="14"/>
+        <file name="location.js" path="C:\Users\Lisa\repos\UBSafe-Backend\models\location.js">
+          <metrics statements="19" coveredstatements="18" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="6"/>
+          <line num="1" count="1" type="stmt"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="8" count="2" type="stmt"/>
+          <line num="9" count="2" type="stmt"/>
+          <line num="13" count="2" type="stmt"/>
+          <line num="15" count="2" type="stmt"/>
+          <line num="16" count="2" type="stmt"/>
+          <line num="17" count="2" type="stmt"/>
+          <line num="18" count="0" type="stmt"/>
+          <line num="21" count="2" type="stmt"/>
+          <line num="22" count="2" type="stmt"/>
+          <line num="23" count="2" type="stmt"/>
+          <line num="31" count="2" type="stmt"/>
+          <line num="32" count="2" type="stmt"/>
+          <line num="33" count="2" type="stmt"/>
+          <line num="36" count="1" type="stmt"/>
+          <line num="40" count="1" type="stmt"/>
+          <line num="41" count="1" type="stmt"/>
+        </file>
+        <file name="user.js" path="C:\Users\Lisa\repos\UBSafe-Backend\models\user.js">
+          <metrics statements="27" coveredstatements="27" conditionals="4" coveredconditionals="4" methods="8" coveredmethods="8"/>
+          <line num="1" count="2" type="stmt"/>
+          <line num="5" count="4" type="stmt"/>
+          <line num="6" count="4" type="stmt"/>
+          <line num="7" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="11" count="3" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="20" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="23" count="6" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="32" count="4" type="stmt"/>
+          <line num="33" count="4" type="stmt"/>
+          <line num="34" count="2" type="stmt"/>
+          <line num="36" count="4" type="stmt"/>
+          <line num="41" count="2" type="stmt"/>
+          <line num="42" count="2" type="stmt"/>
+          <line num="43" count="4" type="stmt"/>
+          <line num="45" count="2" type="stmt"/>
+          <line num="49" count="2" type="stmt"/>
+          <line num="50" count="2" type="stmt"/>
+          <line num="51" count="2" type="stmt"/>
+          <line num="52" count="2" type="stmt"/>
+          <line num="53" count="2" type="stmt"/>
+          <line num="56" count="2" type="stmt"/>
+        </file>
+      </package>
+      <package name="tests">
+        <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <file name="test_db.js" path="C:\Users\Lisa\repos\UBSafe-Backend\tests\test_db.js">
+          <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="3" count="2" type="stmt"/>
+          <line num="4" count="2" type="stmt"/>
+          <line num="5" count="2" type="stmt"/>
+          <line num="7" count="2" type="stmt"/>
+          <line num="9" count="2" type="stmt"/>
+          <line num="12" count="2" type="stmt"/>
+          <line num="13" count="2" type="stmt"/>
+          <line num="16" count="2" type="stmt"/>
+          <line num="18" count="2" type="stmt"/>
+          <line num="20" count="2" type="stmt"/>
+          <line num="21" count="2" type="stmt"/>
+          <line num="22" count="2" type="stmt"/>
+        </file>
+      </package>
     </metrics>
   </project>
 </coverage>
