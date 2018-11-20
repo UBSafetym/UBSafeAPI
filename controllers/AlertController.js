@@ -26,7 +26,7 @@ router.post('/alert/:sessionID', async (req, res) => {
         let addMsgData = {"sessionID": req.params.sessionID};
         let message = Alert.createMessage(session.traveller.name, req.body.alertCode, addMsgData);
         let watcherTokens = User.getDeviceTokens(session.joinedWatchers);
-        await Alert.sendNotifications(watcherTokens, message);
+        Alert.sendNotifications(watcherTokens, message);
         res.status(200).send(new Response(200, "", "Alert has been sent."));
     }
     catch(err) {
@@ -52,7 +52,7 @@ router.post('/alert', async (req, res) => {
         let addMsgData = {"userName": user.userName, "userLoc": userLoc};
         let message = Alert.createMessage(user.userName, req.body.alertCode, addMsgData);
         let tokens = User.getDeviceTokens(nearbyUsers);
-        await Alert.sendNotifications(tokens, message);
+        Alert.sendNotifications(tokens, message);
         res.status(200).send(new Response(200, "", "Alert has been sent."));
     }
     catch(err)
