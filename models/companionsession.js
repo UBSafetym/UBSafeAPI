@@ -70,7 +70,6 @@ async function createSession(session)
         User.getUser(session.travellerID).then( traveller => {
             //post the new companion session to the db
             var newSession = makeCompanionSession(traveller, session);
-            console.log(newSession);
             db.collection('companion_sessions')
                 .add(newSession)
                 .then(sessionRef => {

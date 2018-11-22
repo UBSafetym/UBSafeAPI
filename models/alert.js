@@ -13,11 +13,10 @@ const JOINED_SESSION = 8;
 async function sendNotifications(tokens, msg)
 {
     let notifications = createNotifications(tokens, msg.body, msg.data);
-    console.log(notifications);
     return new Promise((resolve, reject) => {
         if(notifications.length == 0)
         {
-            reject(new Error("Invalid device token."));
+            throw new Error("Invalid device token.");
         }
         let expo = new Expo();
         let chunks = expo.chunkPushNotifications(notifications);
@@ -33,7 +32,6 @@ async function sendNotifications(tokens, msg)
                         resolve(tickets);
                     }
             }).catch(err => {
-                console.error(err);
                 reject(err);
             });
         }
@@ -118,7 +116,6 @@ function createNotifications(tokens, body, data)
     {
         if(!Expo.isExpoPushToken(token))
         {
-            console.error('Push token ' + token + ' is not a valid Expo push token');
             continue;
         }
         messages.push(new Notification(token, body, data));

@@ -8,10 +8,11 @@ jest.mock('../db.js', () => {
 const firebase = require('firebase-admin');
 const User = require('../models/user');
 const Location = require('../models/location');
+jest.setTimeout(30000);
 
 describe('location.js tests', function () {
-    it('getNearbyUsers() Success', async () => {
-        let testUsers = [{
+    it('getNearbyUsers(): gets a user who is nearby the test user', async () => {
+        let testUser = {
             "userName": "Changed Test User",
             "ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
             "userID": "testID",
@@ -27,14 +28,14 @@ describe('location.js tests', function () {
                 "ageMin": 0
             },
             "deviceToken": "TestUserDeviceToken"
-        }];
+        };
         var testUserLoc = new firebase.firestore.GeoPoint(37.79, -122.41);
         var loc = {
             coordinates: new firebase.firestore.GeoPoint(37.79, -122.41)
         };
-        let newUser = await User.db.collection('users').doc('testUser').set(testUsers[0]);
+        let newUser = await User.db.collection('users').doc('testUser').set(testUser);
         let newUserLocation = await User.db.geo.set('testUser', loc);
-        return await Location.getNearbyUsers(testUserLoc, 5).then(users => {expect(users).toEqual(testUsers)});
+        await Location.getNearbyUsers(testUserLoc, 5).then(users => {expect(users).toContainEqual(testUser)});
     });
 
     it('getNearbyUsers() Failure', async () => {

@@ -17,6 +17,14 @@ const collectionRef = db.collection('user_locations');
 // Create a GeoFirestore index
 var geofire = new GeoFirestore(collectionRef);
 
+//initialize test db with test data
+/*
+TestData.userArray.forEach( user => {
+    await User.db.collection('users').doc('RecommendationsRequestor').set(testUsers[0]);
+});
+*/
+
+
 module.exports = db;
 module.exports.geo = geofire;
 module.exports.Geofirestore = GeoFirestore;
