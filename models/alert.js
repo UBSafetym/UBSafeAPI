@@ -9,6 +9,8 @@ const CONNECTION_LOST = 5;
 const ALERT_NEARBY_USERS = 6;
 const INVITED_TO_SESSION = 7;
 const JOINED_SESSION = 8;
+const NEAR_DESTINATION = 9;
+const ALERT_RANGE = 5; //km
 
 async function sendNotifications(tokens, msg)
 {
@@ -99,6 +101,13 @@ function createMessage(name, alertCode, additionalData)
                     "alertCode": alertCode,
                 }
             }
+        case NEAR_DESTINATION:
+            return {
+                "body":  name + " is near their destination!",
+                "data": {
+                    "alertCode": alertCode,
+                }
+            }
         default: throw new Error("Invalid alert code!");
     }
 }
@@ -138,10 +147,11 @@ module.exports = {
     "ALERT_NEARBY_USERS": ALERT_NEARBY_USERS,
     "INVITED_TO_SESSION": INVITED_TO_SESSION,
     "JOINED_SESSION": JOINED_SESSION,
+    "NEAR_DESTINATION": NEAR_DESTINATION,
+    "ALERT_RANGE": ALERT_RANGE,
 
     "sendNotifications": sendNotifications,
     "createMessage": createMessage,
     "Notification": Notification
 
 }
-

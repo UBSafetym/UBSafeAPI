@@ -23,11 +23,16 @@ router.use(bodyParser.json());
 router.post('/alert/:sessionID', async (req, res) => {
     try {
         let session = await Session.getSession(req.params.sessionID);
+        if(session.joinedWatchers.length == 0)
+        {
+            res.status(404).send(new Response(404, "No watchers have joined your session.", ""));
+            return;
+        }
         let addMsgData = {"sessionID": req.params.sessionID};
         let message = Alert.createMessage(session.traveller.name, req.body.alertCode, addMsgData);
         let watcherTokens = User.getDeviceTokens(session.joinedWatchers);
+        res.status(200).send(new Response(200, "", ""));
         Alert.sendNotifications(watcherTokens, message);
-        res.status(200).send(new Response(200, "", "Alert has been sent."));
     }
     catch(err) {
         console.log(err);
@@ -48,12 +53,17 @@ router.post('/alert', async (req, res) => {
     {
         let user = await User.getUser(req.body.userID);
         let userLoc = await Locate.getUserLocation(user.userID);
-        let nearbyUsers = await Locate.getNearbyUsers(userLoc, user.preferences.proximity);
+        let nearbyUsers = await Locate.getNearbyUsers(userLoc, Alert.ALERT_RANGE);
+        if(nearbyUsers.length == 0)
+        {
+            res.status(404).send(new Response(404, "No users are nearby!", ""));
+            return;
+        }
         let addMsgData = {"userName": user.userName, "userLoc": userLoc};
         let message = Alert.createMessage(user.userName, req.body.alertCode, addMsgData);
         let tokens = User.getDeviceTokens(nearbyUsers);
+        res.status(200).send(new Response(200, "", ""));
         Alert.sendNotifications(tokens, message);
-        res.status(200).send(new Response(200, "", "Alert has been sent."));
     }
     catch(err)
     {
