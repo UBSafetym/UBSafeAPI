@@ -4,7 +4,7 @@ let userArray = [
     {
         "userName": "Traveller",
         "ratingHistory": [1,3,2,4,7,5,0,5],
-        "userID": "RecommendationsRequestor",
+        "userID": "Traveller",
         "gender": "Other",
         "rating": 3.375,
         "age": 80,
@@ -16,7 +16,7 @@ let userArray = [
             "ageMax": 80,
             "ageMin": 0
         },
-        "deviceToken": "TestUserDeviceToken2"
+        "deviceToken": "TravellerDeviceToken"
     },
     {
         "userName": "MatchingCompanion",
@@ -33,7 +33,7 @@ let userArray = [
             "ageMax": 80,
             "ageMin": 0
         },
-        "deviceToken": "TestUserDeviceToken"
+        "deviceToken": "MatchingCompanionDeviceToken"
     },
 
     {
@@ -51,7 +51,7 @@ let userArray = [
             "ageMax": 80,
             "ageMin": 0
         },
-        "deviceToken": "TestUserDeviceToken"
+        "deviceToken": "OldUserDeviceToken"
     },
 
     {
@@ -69,7 +69,7 @@ let userArray = [
             "ageMax": 80,
             "ageMin": 0
         },
-        "deviceToken": "TestUserDeviceToken"
+        "deviceToken": "MaleUserDeviceToken"
     },
     {
         "userName": "FemaleUser",
@@ -86,10 +86,39 @@ let userArray = [
             "ageMax": 80,
             "ageMin": 0
         },
-        "deviceToken": "TestUserDeviceToken"
+        "deviceToken": "FemaleUserDeviceToken"
     }
 ];
 
+let sessionRequest = {
+	"travellerID": "Traveller",
+	"watcherIDs": ["FemaleUser", "MaleUser"],
+	"travellerDest": new firebase.firestore.GeoPoint(0, 0), 
+	"travellerSource": new firebase.firestore.GeoPoint(0, 0),
+	"travellerLocation": new firebase.firestore.GeoPoint(0, 0),
+	"lastUpdated": 0
+};
+
+let sessionOracle = {
+	"id": "SuUjbfoBlVzTW1y4a0XM",
+	"data": {
+	    "traveller": {
+		"id": "Traveller",
+		"name": "Traveller",
+		"deviceToken": "TravellerDeviceToken"
+	    },
+	    "travellerSource": new firebase.firestore.GeoPoint(0,0),
+	    "travellerDest": new firebase.firestore.GeoPoint(0,0),
+	    "travellerLoc": new firebase.firestore.GeoPoint(0,0),
+	    "lastUpdated": 0,
+	    "joinedWatchers": [],
+	    "active": true
+	}
+};
+
+
 module.exports = {
-    "userArray": userArray
+        "userArray": userArray,
+	"sessionRequest": sessionRequest,
+	"sessionOracle": sessionOracle
 }

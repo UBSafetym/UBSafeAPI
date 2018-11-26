@@ -1,7 +1,7 @@
-
 jest.mock('../db.js', () => {
-    const db = require('./test_db');
-    return db;
+	const MockFirebase = require('mock-cloud-firestore');
+	const db = new MockFirebase().firestore();
+	return db;
 });
 
 const User = require('../models/user');
