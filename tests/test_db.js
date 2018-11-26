@@ -4,7 +4,8 @@ const admin = require('firebase-admin');
 const settings = {timestampsInSnapshots: true};
 const GeoFirestore = require('geofirestore').GeoFirestore;
 
-var serviceAccount = require('./test_credentials/ubsafe-testing-firebase-adminsdk-nd5ox-0a6d0774f2.json');
+//var serviceAccount = require('./test_credentials/ubsafe-testing-firebase-adminsdk-nd5ox-0a6d0774f2.json');
+var serviceAccount = require('./test_credentials/ubsafe-testdb-firebase-adminsdk-llynq-460e473fb4.json');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
