@@ -23,7 +23,8 @@
   "devDependencies": {
     "firebase-mock": "^2.2.10",
     "jest": "^23.6.0",
-    "mock-cloud-firestore": "^0.8.2"
+    "mock-cloud-firestore": "^0.8.2",
+    "supertest": "^3.3.0"
   },
   "repository": {
     "type": "git",
