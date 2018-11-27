@@ -9,8 +9,8 @@ let userArray = [
         "rating": 3.375,
         "age": 80,
         "preferences": {
-            "female": false,
-            "male": false,
+            "female": true,
+            "male": true,
             "proximity": 5,
             "other": true,
             "ageMax": 80,
