@@ -20,7 +20,6 @@ let userArray = [
     },
     {
         "userName": "MatchingCompanion",
-        "ratingHistory": [1,3,2,4,7,5,0,5],
         "userID": "MatchingCompanion",
         "gender": "Other",
         "rating": 3.375,
