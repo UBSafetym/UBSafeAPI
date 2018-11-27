@@ -86,6 +86,15 @@ describe('System/API Endpoint Tests', function () {
             .expect('Content-Type', /json/)
 	    .expect(404);
     });
+    it('throws an error on PUT /companionsession/join with invalid request', async function () {
+    let joinResponse = await 
+        request(app)
+            .put('/companionsession/join')
+            .send({})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+	    .expect(404);    
+    });
     it('throws an error on PUT /companionsession/:sessionID/rate with invalid rating', async function () {
 	let response = await 
         request(app)
