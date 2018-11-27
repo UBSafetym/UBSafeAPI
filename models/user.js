@@ -11,7 +11,7 @@ async function getUser(userID)
         return user.data();
     }
     catch(err) {
-        throw new Error('Cannot find user in the database.');
+        throw new Error('Cannot find user ' + userID + ' in the database.');
     }
 }
 

@@ -14,7 +14,7 @@ async function getRecommendations(userID)
         return User.getUserProfiles(recs);
     }
     catch(err){
-        throw new Error("Error getting user's recommended Companions.")
+        throw err;
     }
 }
 

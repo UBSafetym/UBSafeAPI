@@ -30,8 +30,7 @@ router.post('/alert/:sessionID', async (req, res) => {
         res.status(200).send(new Response(200, "", "Alert has been sent."));
     }
     catch(err) {
-        console.log(err);
-        res.status(500).send(new Response(500, err, ""));
+        res.status(404).send(new Response(404, err, ""));
     }
 });
 
@@ -52,13 +51,12 @@ router.post('/alert', async (req, res) => {
         let addMsgData = {"userName": user.userName, "userLoc": userLoc};
         let message = Alert.createMessage(user.userName, req.body.alertCode, addMsgData);
         let tokens = User.getDeviceTokens(nearbyUsers);
-        await Alert.sendNotifications(tokens, message);
+        Alert.sendNotifications(tokens, message);
         res.status(200).send(new Response(200, "", "Alert has been sent."));
     }
     catch(err)
     {
-        console.log(err);
-        res.status(500).send(new Response(500, err, ""));
+        res.status(404).send(new Response(404, err, ""));
     }
 });
 

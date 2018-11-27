@@ -10,36 +10,6 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
-/*
- * API Endpoint: GET /users
- * - returns all users in the db
- */
-router.get('/users', (req, res) => {
-    let response = [];
-    const usersSnapshot = db.collection('users').get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                response.push(doc.data());
-            });
-            res.status(200).send({errorMessage: "", responseData: response});
-        })
-    .catch(err => {
-        res.status(500).send({errorMessage: err.message, responseData: ""});
-    });
-});
-
-/*
- * API Endpoint: GET /users/{userID}
- * - returns user with id = {userID}
- */
-router.get('/users/:userID', async (req, res) => {
-    User.getUser(req.params.userID).then( result => {
-        res.status(200).send(new Response(200, "", result));
-        })
-        .catch(err => {
-            res.status(500).send(new Response(500, err, ""));
-        });
-});
 
 /*
  * API Endpoint: PUT /users/{userID} + body
@@ -61,19 +31,12 @@ router.put('/users/:userID', async (req, res) => {
             delete body[propName];
         }
     }
-    if(Object.keys(body).length === 0 && body.constructor === Object)
-    {
-        res.status(200).send(new Response(200, "", "No updates were sent."));
-    }
-    else{
-        var userRef = db.collection('users').doc(req.params.userID);
-        userRef.update(body).then(dbRes => {
-            console.log(dbRes);
-            res.status(200).send(new Response(200, "", "User has been updated."));
-        }).catch(err =>{
-             res.status(500).send(new Response(500, err.message, ""));
-        });
-    }
+    var userRef = db.collection('users').doc(req.params.userID);
+    userRef.update(body).then(dbRes => {
+        res.status(200).send(new Response(200, "", "User has been updated."));
+    }).catch(err =>{
+         res.status(404).send(new Response(404, err.message, ""));
+    });
 });
 
 module.exports.router = router;

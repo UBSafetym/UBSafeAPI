@@ -3,63 +3,32 @@ jest.mock('../db.js', () => {
     const db = require('./test_db');
     return db;
 });
+jest.setTimeout(30000);
 
+const TestData = require('./testdata');
 const request = require('supertest');
 const app = require('../app.js');
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 describe('UserController.js tests', function () {
-    it('get all users', function (done) {
-        const response = request(app)
-            .get('/users')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200, done);
-            //.expect({errorMessage: "", responseData: testResponse}, done);
-    });
-    
-    it('get specific user', function (done) {
+    it('updates existing user', async function () {
+	let response = await
         request(app)
-            .get('/users/testID')
+            .put('/users/testUser')
+            .send(TestData.userControllerReq)
+            .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200, done);
+            .expect(200);
     });
-    
-    it('get non-existent user', function (done) {
+
+    it('throws error when trying to PUT non-existent user', async function () {
+	let response = await
         request(app)
-            .get('/users/idisnonexisting')
+            .put('/users/non-existent-user')
+            .send(TestData.userControllerReq)
+            .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(500) 
-            .end((err) => {
-                if (err) return done(err);
-                done();
-            });
-    });
-    
-    it('put user', function (done) {
-        let data = {
-            "userName": "Changed Test User",
-            "ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
-            "userID": "testID",
-            "gender": "Other",
-            "rating": 3.375,
-            "age": 80,
-            "preferences": {
-                "female": true,
-                "male": false,
-                "proximity": 5,
-                "other": true,
-                "ageMax": 80,
-                "ageMin": 0
-            },
-            "deviceToken": "TestUserDeviceToken"
-        } 
-        request(app)
-            .put('/users/testID')
-            .send(data)
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200, done);
+            .expect(404);
     });
 });

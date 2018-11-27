@@ -17,7 +17,7 @@ describe('user.js tests', function () {
     })
 
     it('getUser() Failure', async () => {
-        return await User.getUser('non-existantUser').then().catch(err => {expect(err).toEqual(new Error('Cannot find user in the database.'))});
+        return await User.getUser('non-existentUser').then().catch(err => {expect(err).toEqual(new Error('Cannot find user non-existentUser in the database.'))});
     })
 
     test("getAvgRating() Success", () => {

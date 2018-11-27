@@ -6,11 +6,12 @@ jest.mock('../db.js', () => {
 
 const request = require('supertest');
 const app = require('../app.js');
+jest.setTimeout(30000);
 
 describe('RecommendationController.js tests', function () {
     it('get recommendations', function (done) {
         request(app)
-            .get('/recommendations/testID')
+            .get('/recommendations/testUser')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200, done);

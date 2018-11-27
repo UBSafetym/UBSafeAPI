@@ -16,7 +16,7 @@ let userArray = [
             "ageMax": 80,
             "ageMin": 0
         },
-        "deviceToken": "TravellerDeviceToken"
+        "deviceToken": "ExponentPushToken[si1JbhFlVLoCFLbxqaKoFn]"
     },
     {
         "userName": "MatchingCompanion",
@@ -33,7 +33,7 @@ let userArray = [
             "ageMax": 80,
             "ageMin": 0
         },
-        "deviceToken": "MatchingCompanionDeviceToken"
+        "deviceToken": "ExponentPushToken[si1JbhFlVLoCFLbxqaKoFn]"
     },
 
     {
@@ -90,9 +90,17 @@ let userArray = [
     }
 ];
 
+let recommendationOracle = {
+        "userName": "MatchingCompanion",
+        "userID": "MatchingCompanion",
+        "gender": "Other",
+        "rating": 3.375,
+        "age": 80
+};
+
 let sessionRequest = {
 	"travellerID": "Traveller",
-	"watcherIDs": ["FemaleUser", "MaleUser"],
+	"watcherIDs": ["MatchingCompanion", "FemaleUser", "MaleUser"],
 	"travellerDest": new firebase.firestore.GeoPoint(0, 0), 
 	"travellerSource": new firebase.firestore.GeoPoint(0, 0),
 	"travellerLocation": new firebase.firestore.GeoPoint(0, 0),
@@ -105,7 +113,7 @@ let sessionOracle = {
 	    "traveller": {
 		"id": "Traveller",
 		"name": "Traveller",
-		"deviceToken": "TravellerDeviceToken"
+		"deviceToken": "ExponentPushToken[si1JbhFlVLoCFLbxqaKoFn]"
 	    },
 	    "travellerSource": new firebase.firestore.GeoPoint(0,0),
 	    "travellerDest": new firebase.firestore.GeoPoint(0,0),
@@ -117,8 +125,70 @@ let sessionOracle = {
 };
 
 
+let userControllerReq = {
+	"userName": "Test User",
+	"ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
+	"userID": "testUser",
+	"gender": null,
+	"rating": 3.375,
+	"age": 80,
+	"preferences.female": true,
+	"preferences.male": false,
+	"preferences.other": true,
+	"preferences.ageMin": 16,
+	"preferences.ageMax": 100,
+	"preferences.proximity": 20,
+	"deviceToken": "TestUserDeviceToken"
+}; 
+
+let locationTestUser = {
+    "userName": "Location Test User",
+    "ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
+    "userID": "LocationTestUserID",
+    "gender": "Other",
+    "rating": 3.375,
+    "age": 80,
+    "preferences": {
+	"female": true,
+	"male": false,
+	"proximity": 5,
+	"other": true,
+	"ageMax": 80,
+	"ageMin": 0
+    },
+    "deviceToken": "TestUserDeviceToken"
+};
+let locationTestNearbyUser = {
+    "userName": "Nearby User",
+    "ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
+    "userID": "NearbyUserID",
+    "gender": "Other",
+    "rating": 3.375,
+    "age": 80,
+    "preferences": {
+	"female": true,
+	"male": false,
+	"proximity": 5,
+	"other": true,
+	"ageMax": 80,
+	"ageMin": 0
+    },
+"deviceToken": "ExponentPushToken[si1JbhFlVLoCFLbxqaKoFn]"
+};
+let locOracle = new firebase.firestore.GeoPoint(37.79, -122.41);
+var testLocDoc = {
+    coordinates: new firebase.firestore.GeoPoint(37.79, -122.41)
+};
+
+
 module.exports = {
         "userArray": userArray,
 	"sessionRequest": sessionRequest,
-	"sessionOracle": sessionOracle
+	"sessionOracle": sessionOracle,
+	"userControllerReq": userControllerReq,
+	"locationTestUser": locationTestUser,
+	"locOracle": locOracle,
+	"testLocDoc": testLocDoc,
+	"locationTestNearbyUser": locationTestNearbyUser,
+	"recommendationOracle": recommendationOracle
 }
