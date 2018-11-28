@@ -22,7 +22,17 @@ function filterRecommendations(travellerID, preferences, nearbyUsers)
 {
     var users =  nearbyUsers.filter(user => matchesPreferences(travellerID, preferences, user));
     users.slice(0, 100);
-    users.sort(user => user.rating);
+    users.sort((userA, userB) => {
+	    if(!userA.hasOwnProperty('rating'))
+	    {
+		    return 1;
+	    }
+	    else if(!userB.hasOwnProperty('rating'))
+	    {
+		    return -1;
+	    }
+	    return userB.rating - userA.rating
+    });
     return users;
 }
 
