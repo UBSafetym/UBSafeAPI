@@ -1,22 +1,18 @@
-const db = require('../db').db;
+const db = require('../db');
 
 async function getUser(userID)
 {
-    return new Promise((resolve, reject) => {
-        let user = db.collection('users').doc(userID);
-        let retrievedUser = user.get()
-            .then(doc => {
-                if(!doc.exists){
-                    reject("Cannot find user in the db.");
-                }
-                else{
-                    resolve(doc.data());
-                }
-            })
-            .catch(err => {
-                    reject(err);
-            });
-    });
+    try{
+        let user = await db.collection('users').doc(userID).get();
+        if(!user.exists)
+        {
+            throw new Error('Cannot find user in the database.')
+        }
+        return user.data();
+    }
+    catch(err) {
+        throw new Error('Cannot find user ' + userID + ' in the database.');
+    }
 }
 
 function getAvgRating(ratingHistory)
@@ -61,6 +57,7 @@ module.exports = {
     "getUser": getUser,
     "getAvgRating": getAvgRating,
     "getUserProfiles": getUserProfiles,
-    "getDeviceTokens": getDeviceTokens
+    "getDeviceTokens": getDeviceTokens,
+    "db": db
 }
 

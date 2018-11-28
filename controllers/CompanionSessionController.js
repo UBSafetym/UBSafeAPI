@@ -2,7 +2,7 @@
 var Expo = require('expo-server-sdk').Expo;
 var express = require('express');
 var admin = require('firebase-admin');
-var db = require('../db').db;
+var db = require('../db');
 var router = express.Router();
 
 var bodyParser = require('body-parser');
@@ -29,16 +29,13 @@ var Session = require('../models/companionsession');
 router.post('/companionsession', async (req, res) => {
     try{
         let session = await Session.createSession(req.body);
-        console.log(session);
         let message = Alert.createMessage(session.data.traveller.name, Alert.INVITED_TO_SESSION, session);
         let tokens = await Session.getWatcherTokensFromIDs(req.body.watcherIDs);
         Alert.sendNotifications(tokens, message);
         res.status(200).send(new Response(200, "", session))
     }
     catch(err){
-        console.log("POST COMPANIONSESSION FAILED:");
-        console.log(err);
-        res.status(500).send(new Response(500, err, ""));
+        res.status(404).send(new Response(404, err, ""));
     }
 });
 
@@ -65,24 +62,7 @@ router.put('/companionsession/join', async (req, res) => {
         res.status(200).send(new Response(200, "", "Successfully joined session!"));
     }
     catch(err){
-        console.log(err);
-        res.status(500).send(new Response(500, err, ""));
-    }
-});
-
-/* DELETE A COMPANION SESSION:
- *
- * API Endpoint: DELETE /companionsession/:sessionID
- */
-router.delete('/companionsession/:sessionID', async (req, res) => {
-    try{
-        let sessionRef = db.collection('companion_sessions').doc(req.params.sessionID);
-        await sessionRef.delete();
-        res.status(200).send(new Response(200, "", "Session has been removed from the database."));
-    }
-    catch(err){
-        console.error(err);
-        res.status(500).send(new Response(500, err, ""));
+        res.status(404).send(new Response(404, err, ""));
     }
 });
 
@@ -99,8 +79,7 @@ router.post('/companionsession/:sessionID/rate', async (req, res) => {
         let rating = req.body.rating;
         if(isNaN(rating) || rating > 5 || rating < 0)
         {
-            res.status(404).send(new Response(404, new Error("Invalid rating."), ""));
-            return;
+		throw new Error("Invalid Rating");
         }
         let session = await Session.getSession(req.params.sessionID);
         session.joinedWatchers.forEach(async (watcher) => {
@@ -111,13 +90,12 @@ router.post('/companionsession/:sessionID/rate', async (req, res) => {
                 }
                 user.ratingHistory.push(req.body.rating);
                 user.rating = User.getAvgRating(user.ratingHistory);
-                console.log(user);
                 await db.collection('users').doc(user.userID).update(user);
         });
         res.status(200).send(new Response(200, "", session));
     }
     catch(err){
-        res.status(500).send(new Response(500, err, ""));
+        res.status(404).send(new Response(404, err, ""));
     }
 });
 

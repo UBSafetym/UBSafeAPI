@@ -1,4 +1,4 @@
-const db = require('../db').db;
+const db = require('../db');
 const User = require('../models/user');
 
 function makeCompanionSession(traveller, session)
@@ -46,38 +46,31 @@ async function getWatcherTokensFromIDs(watcherIDs)
 
 async function getSession(sessionID)
 {
-    return new Promise((resolve, reject) => {
-        let sessionRef = db.collection('companion_sessions').doc(sessionID);
-        let retrievedSession = sessionRef.get()
-            .then(session => {
-                if(!session.exists){
-                    reject("Cannot find session in the db.");
-                }
-                else{
-                    resolve(session.data());
-                }
-            })
-            .catch(err => {
-                    reject(err);
-            });
-    });
+	try{
+		let session = await db.collection('companion_sessions').doc(sessionID).get();
+		if(!session.exists){
+			throw new Error("Cannot find session in the database.");
+		}
+		return session.data();
+	}
+	catch(err){
+		throw err;
+	}
 }
 
 /* Creates a Companion Session and inserts it into the db */
 async function createSession(session)
 {
-    return new Promise(async (resolve, reject) => {
-        User.getUser(session.travellerID).then( traveller => {
-            //post the new companion session to the db
-            var newSession = makeCompanionSession(traveller, session);
-            console.log(newSession);
-            db.collection('companion_sessions')
-                .add(newSession)
-                .then(sessionRef => {
-                    resolve({"id": sessionRef.id, "data": newSession});
-                }).catch(err => reject(err));
-        }).catch(err => reject(err));
-    });
+	try{
+		let traveller = await User.getUser(session.travellerID);
+		let newSession = makeCompanionSession(traveller, session); 
+		let sessionRef = await db.collection('companion_sessions').add(newSession);
+		return ({ "id": sessionRef.id, "data": newSession });
+	}
+	catch (err)
+	{
+		throw err;
+	}
 }
 
 module.exports = {

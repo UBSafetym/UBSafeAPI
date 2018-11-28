@@ -17,6 +17,6 @@ const collectionRef = db.collection('user_locations');
 // Create a GeoFirestore index
 var geofire = new GeoFirestore(collectionRef);
 
-module.exports.db = db;
+module.exports = db;
 module.exports.geo = geofire;
 module.exports.Geofirestore = GeoFirestore;
