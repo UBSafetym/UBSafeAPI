@@ -11,6 +11,9 @@ beforeAll(async () => {
 
         await User.db.collection('users').doc(TestData.locationTestNearbyUser.userID).set(TestData.locationTestNearbyUser);
         await User.db.geo.set(TestData.locationTestNearbyUser.userID, TestData.testLocDoc);
+    
+        await User.db.collection('users').doc(TestData.locationTestOutsideRangeUser.userID).set(TestData.locationTestOutsideRangeUser);
+        await User.db.geo.set(TestData.locationTestOutsideRangeUser.userID, TestData.testLocDocOutsideRange);
 	return;
 });
 
@@ -22,9 +25,10 @@ const Location = require('../models/location');
 jest.setTimeout(30000);
 
 describe('location.js tests', function () {
-    it('getNearbyUsers(): gets a user who is nearby the test user', async () => {
-        let nearbyUsers = await Location.getNearbyUsers(TestData.testLocDoc.coordinates, 5);
+    it('getNearbyUsers(): gets a user who is nearby the test user and checks that a user slightly outside of desired proximity does not appear', async () => {
+        let nearbyUsers = await Location.getNearbyUsers(TestData.testLocDoc.coordinates, 10);
 	expect(nearbyUsers).toContainEqual(TestData.locationTestNearbyUser);
+    expect(nearbyUsers).not.toContainEqual(TestData.locationTestOutsideRangeUser);
     });
 
     it('getNearbyUsers() Failure', async () => {

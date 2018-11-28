@@ -174,9 +174,29 @@ let locationTestNearbyUser = {
     },
 "deviceToken": "ExponentPushToken[si1JbhFlVLoCFLbxqaKoFn]"
 };
+let locationTestOutsideRangeUser = {
+    "userName": "Outside Range User",
+    "ratingHistory": [1, 3, 2, 4, 7, 5, 0, 5],
+    "userID": "OutsideRangeUserID",
+    "gender": "Other",
+    "rating": 3.375,
+    "age": 80,
+    "preferences": {
+	"female": true,
+	"male": false,
+	"proximity": 5,
+	"other": true,
+	"ageMax": 80,
+	"ageMin": 0
+    },
+"deviceToken": "ExponentPushToken[si1JbhFlVLoCFLbxqaKoFn]"
+};
 let locOracle = new firebase.firestore.GeoPoint(37.79, -122.41);
 var testLocDoc = {
     coordinates: new firebase.firestore.GeoPoint(37.79, -122.41)
+};
+var testLocDocOutsideRange = {
+    coordinates: new firebase.firestore.GeoPoint(37.79, -122.56)
 };
 
 
@@ -189,5 +209,7 @@ module.exports = {
 	"locOracle": locOracle,
 	"testLocDoc": testLocDoc,
 	"locationTestNearbyUser": locationTestNearbyUser,
+    "testLocDocOutsideRange": testLocDocOutsideRange,
+	"locationTestOutsideRangeUser": locationTestOutsideRangeUser,
 	"recommendationOracle": recommendationOracle
 }
