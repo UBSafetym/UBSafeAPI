@@ -82,9 +82,9 @@ router.post('/companionsession/:sessionID/rate', async (req, res) => {
 		throw new Error("Invalid Rating");
         }
         let session = await Session.getSession(req.params.sessionID);
-        session.joinedWatchers.forEach(async (watcher) => {
+        await session.joinedWatchers.forEach(async (watcher) => {
                 let user = await User.getUser(watcher.id);
-                if(!user.ratingHistory)
+                if(!user.hasOwnProperty('ratingHistory'))
                 {
                     user.ratingHistory = [];
                 }

@@ -15,7 +15,7 @@ async function getNearbyUsers(loc, proximity)
         geoQuery.on("key_entered", async function(key, location, distance) {
             user = User.getUser(key).then(user => {
                 nearbyUsers.push(user);
-            }).catch(err => {reject(err);});
+            });
         });
 
         geoQuery.on("ready", function(){

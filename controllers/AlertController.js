@@ -53,6 +53,8 @@ router.post('/alert', async (req, res) => {
         let user = await User.getUser(req.body.userID);
         let userLoc = await Locate.getUserLocation(user.userID);
         let nearbyUsers = await Locate.getNearbyUsers(userLoc, Alert.ALERT_RANGE);
+	//ensure that a user does not send the alert to themselves
+	nearbyUsers = nearbyUsers.filter((nearbyUser) => {return (nearbyUser.userID != user.userID)});
         if(nearbyUsers.length == 0)
         {
             res.status(404).send(new Response(404, "No users are nearby!", ""));

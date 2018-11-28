@@ -22,6 +22,7 @@ function filterRecommendations(travellerID, preferences, nearbyUsers)
 {
     var users =  nearbyUsers.filter(user => matchesPreferences(travellerID, preferences, user));
     users.slice(0, 100);
+    //all users who do not have a rating will sorted to the end
     users.sort((userA, userB) => {
 	    if(!userA.hasOwnProperty('rating'))
 	    {

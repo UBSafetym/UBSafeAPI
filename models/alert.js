@@ -33,8 +33,6 @@ async function sendNotifications(tokens, msg)
                     {
                         resolve(tickets);
                     }
-            }).catch(err => {
-                reject(err);
             });
         }
     });
