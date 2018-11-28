@@ -4,33 +4,34 @@ jest.mock('../db.js', () => {
 	return db;
 });
 
+const db = require('../db.js');
 const User = require('../models/user');
 
 describe('user.js tests', function () {
-    it('getUser() Success', async () => {
+    it('retrieves a user that exists in the database by their user ID', async () => {
         var testUser = {
             age: 15,
             username: 'user_a'
         };
-        let newUser = await User.db.collection('users').doc('getUserTest').set(testUser);
+        let newUser = await db.collection('users').doc('getUserTest').set(testUser);
         return await User.getUser('getUserTest').then(user => {expect(user).toEqual(testUser)});
     })
 
-    it('getUser() Failure', async () => {
+    it("throws an error when asked to retrieve a user that doesn't exist in the database", async () => {
         return await User.getUser('non-existentUser').then().catch(err => {expect(err).toEqual(new Error('Cannot find user non-existentUser in the database.'))});
     })
 
-    test("getAvgRating() Success", () => {
+    test("can calculate the average of an array", () => {
         let ratings = [0, 0, 1, 2, 3, 4, 5];
         expect(User.getAvgRating(ratings)).toBe((15/7));
     });
 
-    test("getAvgRating() Failure", () => {
+    test("returns -1 when asked to calculate the average of an empty array", () => {
         let ratings = [];
         expect(User.getAvgRating(ratings)).toBe(-1);
     });
 
-    test("getDeviceTokens() Success", () => {
+    test("can return an array of user device tokens when given an array of users", () => {
         let testUsers = [
             {
                 "deviceToken": "JonDeviceToken",
@@ -124,14 +125,14 @@ describe('user.js tests', function () {
         expect(User.getDeviceTokens(testUsers)).toEqual(tokens);
     });
 
-    test("getDeviceTokens() Failure", () => {
+    test("returns an empty array when asked to retrieve the device tokens of an empty array", () => {
         let testUsers = [];
         let tokens = [];
         expect(User.getDeviceTokens(testUsers)).toEqual(tokens);
     });
 
 
-    test("getUserProfiles() Success", () => {
+    test("can return an array full of user profiles when given an array of users", () => {
         let testUser = {
             "ratingHistory":[1,3,2,4,7,5,0,5],
             "userID":"testID",
@@ -163,7 +164,7 @@ describe('user.js tests', function () {
         expect(User.getUserProfiles(userArr)[0]).toEqual(profile);
     });
 
-    test("getUserProfiles() Failure", () => {
+    test("returns an empty array when asked to create user profiles of an empty array", () => {
         let userArr = [];
         expect(User.getUserProfiles(userArr).length).toBe(0);
         expect(User.getUserProfiles(userArr)[0]).toEqual(undefined);

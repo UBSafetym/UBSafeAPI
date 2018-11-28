@@ -40,7 +40,6 @@ let userArray = [
         "ratingHistory": [1,3,2,4,7,5,0,5],
         "userID": "OldUser",
         "gender": "Female",
-        "rating": 3.375,
         "age": 100,
         "preferences": {
             "female": true,
@@ -58,7 +57,6 @@ let userArray = [
         "ratingHistory": [1,3,2,4,7,5,0,5],
         "userID": "MaleUser",
         "gender": "Male",
-        "rating": 3.375,
         "age": 80,
         "preferences": {
             "female": true,

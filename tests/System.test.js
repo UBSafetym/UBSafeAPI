@@ -1,6 +1,3 @@
-require('iconv-lite').encodingExists('utf8'); 
-require('iconv-lite/encodings');
-
 jest.mock('../db.js', () => {
     const db = require('./test_db');
     return db;
@@ -12,6 +9,7 @@ const firebase = require('firebase-admin');
 const request = require('supertest');
 const app = require('../app.js');
 const TestData = require('./testdata.js');
+const Alert = require('../models/alert.js');
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,7 +19,10 @@ var sessionID;
 beforeAll(async () => {
 	await TestData.userArray.forEach(async (user) => {
 		await db.collection('users').doc(user.userID).set(user);
+		await db.geo.set(user.userID, TestData.testLocDoc);
 	});
+        await db.collection('users').doc(TestData.locationTestOutsideRangeUser.userID).set(TestData.locationTestOutsideRangeUser);
+        await db.geo.set(TestData.locationTestOutsideRangeUser.userID, TestData.testLocDocOutsideRange);
 	let createSessionResponse = await 
         request(app)
             .post('/companionsession')
@@ -34,7 +35,7 @@ beforeAll(async () => {
 });
 
 describe('System/API Endpoint Tests', function () {
-    it('creates a companion session, allows a watcher to join, alerts said watchers, and then submits a new rating to all session watchers', async function () {
+    it('creates a companion session, returns an error when Traveller tries to alert their watchers when no watchers have joined, allows a watcher to join, alerts said watchers, and then submits a new rating to all session watchers', async function () {
 	let createSessionResponse = await 
         request(app)
             .post('/companionsession')
@@ -43,6 +44,14 @@ describe('System/API Endpoint Tests', function () {
             .expect('Content-Type', /json/)
 	    .expect(200);
 	let sessionID = createSessionResponse.body.responseData.id;
+
+	let alertWithNoWatchersResponse = await 
+        request(app)
+            .post('/alert/' + sessionID)
+            .send({ "alertCode": Alert.ALARM_TRIGGERED })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+	    .expect(404);
 
 	let joinResponse = await 
         request(app)
@@ -56,7 +65,7 @@ describe('System/API Endpoint Tests', function () {
 			request(app)
 			    .post('/alert/' + sessionID)
 			    .send({
-				"alertCode": 0
+				"alertCode": Alert.TERMINATED 
 			    })
 			    .expect(200);
 	let rateSessionResponse = await
@@ -73,11 +82,11 @@ describe('System/API Endpoint Tests', function () {
             .post('/alert')
             .send({
                 "userID": "LocationTestUserID",
-                "alertCode": 6  
+                "alertCode": Alert.ALERT_NEARBY_USERS  
             })
 	    .expect(200);
     });
-    it('throws an error on POST /companionsession with invalid request body', async function () {
+    it('returns an error on POST /companionsession with invalid request body', async function () {
 	let response = await 
         request(app)
             .post('/companionsession')
@@ -86,7 +95,7 @@ describe('System/API Endpoint Tests', function () {
             .expect('Content-Type', /json/)
 	    .expect(404);
     });
-    it('throws an error on PUT /companionsession/join with invalid request', async function () {
+    it('returns an error on PUT /companionsession/join with invalid request', async function () {
     let joinResponse = await 
         request(app)
             .put('/companionsession/join')
@@ -95,7 +104,7 @@ describe('System/API Endpoint Tests', function () {
             .expect('Content-Type', /json/)
 	    .expect(404);    
     });
-    it('throws an error on PUT /companionsession/:sessionID/rate with invalid rating', async function () {
+    it('returns an error on PUT /companionsession/:sessionID/rate with invalid rating', async function () {
 	let response = await 
         request(app)
             .post('/companionsession/' + sessionID + '/rate')
@@ -104,7 +113,7 @@ describe('System/API Endpoint Tests', function () {
             .expect('Content-Type', /json/)
 	    .expect(404);
     });
-    it('throws an error on POST /alert/:sessionID with invalid sessionID', async function () {
+    it('returns an error on POST /alert/:sessionID with invalid sessionID', async function () {
 	let response = await 
         request(app)
             .post('/alert/' + 'invalidSessionID')
@@ -112,13 +121,23 @@ describe('System/API Endpoint Tests', function () {
             .expect('Content-Type', /json/)
 	    .expect(404);
     });
-    it('throws an error on POST /alert with invalid id', async function () {
+    it('returns an error on POST /alert with invalid id', async function () {
         let response = 
 	    await request(app)
             .post('/alert')
             .send({
                 "userID": "invalidID",
-                "alertCode": 6  
+                "alertCode": Alert.ALERT_NEARBY_USERS  
+            })
+	    .expect(404);
+    });
+    it('returns an error on POST /alert to nearby users when there are no nearby users', async function () {
+        let response = 
+	    await request(app)
+            .post('/alert')
+            .send({
+                "userID": TestData.locationTestOutsideRangeUser.userID,
+                "alertCode": Alert.ALERT_NEARBY_USERS  
             })
 	    .expect(404);
     });

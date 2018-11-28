@@ -113,7 +113,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 7, additionalData)).toEqual(expectedResponse);
     });
 
-    test("creturns appropriate object for alertCode 8", () => {
+    test("returns appropriate object for alertCode 8", () => {
         var expectedResponse = {
             "body": "testName has joined your Companion Session!",
             "data": {"alertCode": 8}
@@ -121,10 +121,16 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 8, null)).toEqual(expectedResponse);
     });
 
+    test("returns appropriate object for alertCode 9", () => {
+        var expectedResponse = {
+            "body": "testName is near their destination!",
+            "data": {"alertCode": 9}
+        };
+        expect(Alert.createMessage("testName", 9, null)).toEqual(expectedResponse);
+    });
+
     it('throws error when given createMessage is given an invalid alert code', () => {
-        //return Alert.createMessage().then().catch();
         expect(() => {Alert.createMessage()}).toThrow();
-        //return Alert.createMessage().then().catch(err => {expect(err).toEqual(new Error("Invalid alert code!"))});
     });
 });
 
