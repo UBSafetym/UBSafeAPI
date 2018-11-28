@@ -1,3 +1,12 @@
+/*
+ * Tests the recommendation model
+ * 
+ * Functions Tested:
+ *   - getRecommendations
+ *   - filterRecommendations
+ *   - matchesPreferences
+ */
+
 jest.mock('../db.js', () => {
     const db = require('./test_db');
     return db;
@@ -25,7 +34,7 @@ describe('recommendation.js tests', function () {
         return await Recommendation.getRecommendations('Traveller').then(users => {expect(users).toContainEqual(TestData.recommendationOracle)});
     });
 
-    it('getRecommendations() Failure', async () => {
+    it('throws an error when passing a non-existant user to getRecommendations', async () => {
         return Recommendation.getRecommendations('non-existantUser').then().catch(err => {expect(err).toEqual(new Error("Cannot find user non-existantUser in the database."))});
     });
 });

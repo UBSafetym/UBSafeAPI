@@ -1,3 +1,12 @@
+/*
+ * Tests the user controller
+ * 
+ * Functions Tested:
+ *   - getUser
+ *   - getAvgRating
+ *   - getUserProfiles
+ *   - getDeviceTokens
+ */
 
 jest.mock('../db.js', () => {
     const db = require('./test_db');
