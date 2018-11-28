@@ -1,3 +1,9 @@
+/*
+ * Tests the recommendation controller
+ * 
+ * Functions Tested:
+ *   - GET /recommendations/:userID
+ */
 
 jest.mock('../db.js', () => {
     const db = require('./test_db');
@@ -9,7 +15,7 @@ const app = require('../app.js');
 jest.setTimeout(30000);
 
 describe('RecommendationController.js tests', function () {
-    it('get recommendations', function (done) {
+    it('get recommendations and returns successfully', function (done) {
         request(app)
             .get('/recommendations/testUser')
             .set('Accept', 'application/json')
@@ -17,7 +23,7 @@ describe('RecommendationController.js tests', function () {
             .expect(200, done);
     });
     
-    it('get recommendations for non-existent user', function (done) {
+    it('throws an error when attempting to get recommendations for non-existent user', function (done) {
         request(app)
             .get('/recommendations/idisnonexisting')
             .set('Accept', 'application/json')

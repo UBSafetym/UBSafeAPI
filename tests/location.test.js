@@ -46,7 +46,7 @@ describe('location.js tests', function () {
         return Location.getNearbyUsers(testUserLoc, 5).then().catch();
     });
 
-    it("getUserLocation() Success", async () => {
+    it("returns a user's location & preferred proximity", async () => {
         let newUser = await User.db.collection('users').doc(TestData.locationTestUser.userID).set(TestData.locationTestUser);
         let newUserLocation = await User.db.geo.set(TestData.locationTestUser.userID, TestData.testLocDoc);
         return await Location.getUserLocation(TestData.locationTestUser.userID).then(res => {
@@ -54,7 +54,7 @@ describe('location.js tests', function () {
         });
     });
 
-    it("getUserLocation() Failure", async () => {
+    it("throws an error when passing an invalid user to getUserLocation", async () => {
         return await Location.getUserLocation('non-existantUser').then().catch(err => { expect(err).toEqual( new Error("Could not find user's location.") ) });
     });
 });

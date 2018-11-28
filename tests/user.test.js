@@ -1,3 +1,13 @@
+/*
+ * Tests the user model
+ * 
+ * Functions Tested:
+ *   - getUser
+ *   - getAvgRating
+ *   - getUserProfiles
+ *   - getDeviceTokens
+ */
+
 jest.mock('../db.js', () => {
 	const MockFirebase = require('mock-cloud-firestore');
 	const db = new MockFirebase().firestore();
@@ -125,14 +135,14 @@ describe('user.js tests', function () {
         expect(User.getDeviceTokens(testUsers)).toEqual(tokens);
     });
 
-    test("returns an empty array when asked to retrieve the device tokens of an empty array", () => {
+    test("returns an empty array when attempting to get device tokens from an empty user array", () => {
         let testUsers = [];
         let tokens = [];
         expect(User.getDeviceTokens(testUsers)).toEqual(tokens);
     });
 
 
-    test("can return an array full of user profiles when given an array of users", () => {
+    test("returns the user profiles of the users in a user array", () => {
         let testUser = {
             "ratingHistory":[1,3,2,4,7,5,0,5],
             "userID":"testID",
@@ -164,7 +174,7 @@ describe('user.js tests', function () {
         expect(User.getUserProfiles(userArr)[0]).toEqual(profile);
     });
 
-    test("returns an empty array when asked to create user profiles of an empty array", () => {
+    test("returns an empty array when attempting to get user profiles of an empty array of users", () => {
         let userArr = [];
         expect(User.getUserProfiles(userArr).length).toBe(0);
         expect(User.getUserProfiles(userArr)[0]).toEqual(undefined);

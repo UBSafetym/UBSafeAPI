@@ -1,3 +1,14 @@
+/*
+ * Tests the alert controller and the companion session controller
+ * 
+ * Functions Tested:
+ *   - POST /alert/:sessionID
+ *   - POST /alert
+ *   - POST /companionsession
+ *   - PUT /companionsession/join
+ *   - POST /companionsession/:sessionID/rate
+ */
+
 jest.mock('../db.js', () => {
     const db = require('./test_db');
     return db;
