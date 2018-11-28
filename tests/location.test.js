@@ -1,4 +1,10 @@
-
+/*
+ * Tests the location model
+ * 
+ * Functions Tested:
+ *   - getNearbyUsers
+ *   - getUserLocation
+ */
 
 jest.mock('../db.js', () => {
     const db = require('./test_db');
@@ -25,13 +31,13 @@ const Location = require('../models/location');
 jest.setTimeout(30000);
 
 describe('location.js tests', function () {
-    it('getNearbyUsers(): gets a user who is nearby the test user and checks that a user slightly outside of desired proximity does not appear', async () => {
+    it('gets a user who is nearby the test user and checks that a different user slightly outside of desired proximity does not appear', async () => {
         let nearbyUsers = await Location.getNearbyUsers(TestData.testLocDoc.coordinates, 10);
-	expect(nearbyUsers).toContainEqual(TestData.locationTestNearbyUser);
-    expect(nearbyUsers).not.toContainEqual(TestData.locationTestOutsideRangeUser);
+	   expect(nearbyUsers).toContainEqual(TestData.locationTestNearbyUser);
+        expect(nearbyUsers).not.toContainEqual(TestData.locationTestOutsideRangeUser);
     });
 
-    it('getNearbyUsers() Failure', async () => {
+    it('throws an error when passing invalid data to getNearbyUsers', async () => {
         var testUserLoc = new firebase.firestore.GeoPoint(37.79, -122.41);
         var loc = {
             coordinates: new firebase.firestore.GeoPoint(37.79, -122.41)

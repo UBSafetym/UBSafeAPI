@@ -1,3 +1,13 @@
+/*
+ * Tests the companionsession model
+ * 
+ * Functions Tested:
+ *   - makeCompanionSession
+ *   - makeSessionProfile
+ *   - getWatcherTokensFromIDs
+ *   - getSession
+ *   - createSession
+ */
 
 jest.mock('../db.js', () => {
 	const MockFirebase = require('mock-cloud-firestore');
@@ -10,7 +20,7 @@ const TestData = require('./testdata');
 const User = require('../models/user');
 
 describe('companionsession.js tests', function () {
-    it('makes a Session Profile when given a user object', () => {
+    it('makes a session profile when given a user object', () => {
         var oracle = {
             "id": "testID",
             "name": "Test User",

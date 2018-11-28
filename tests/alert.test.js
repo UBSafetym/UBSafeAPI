@@ -1,3 +1,10 @@
+/*
+ * Tests the alert model
+ * 
+ * Functions Tested:
+ *   - sendNotifications
+ *   - createMessage
+ */
 
 jest.mock('../db.js', () => {
 	const MockFirebase = require('mock-cloud-firestore');
@@ -9,7 +16,7 @@ const Expo = require('expo-server-sdk').Expo;
 const Alert = require('../models/alert');
 
 describe('alert.js tests', function () {
-    it ("sendNotifications() Success", async () => {
+    it ("sends an alert and returns with a successful status", async () => {
         var tokens = [
             "ExponentPushToken[si1JbhFlVLoCFLbxqaKoFn]" //lisa's push token
         ];
@@ -22,11 +29,11 @@ describe('alert.js tests', function () {
         )});
     });
 
-    it ("sendNotifications(): throws an error when given an array that contains no valid Expo device tokens", async () => {
+    it ("throws an error when sendNotifications is given an array that contains no valid Expo device tokens", async () => {
         return await Alert.sendNotifications(["843wp9u63qau"], {}).then().catch(err => {expect(err).toEqual(new Error('Invalid device token.'))});
     });
 
-    test("createMessage(): returns appropriate object for alertCode 0", () => {
+    test("returns appropriate object for alertCode 0", () => {
         var expectedResponse = {
             "body": "testName has terminated the Virtual Companion Session.",
             "data": {"alertCode": 0}
@@ -34,7 +41,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 0, null)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropriate object for alertCode 1", () => {
+    test("returns appropriate object for alertCode 1", () => {
         var expectedResponse = {
             "body": "testName has reached their destination!",
             "data": {"alertCode": 1}
@@ -42,7 +49,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 1, null)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropriate object for alertCode 2", () => {
+    test("returns appropriate object for alertCode 2", () => {
         var expectedResponse = {
             "body": "testName is moving away from their location!",
             "data": {"alertCode": 2}
@@ -50,7 +57,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 2, null)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropriate object for alertCode 3", () => {
+    test("returns appropriate object for alertCode 3", () => {
         var expectedResponse = {
             "body": "testName has triggered an emergency alarm!",
             "data": {"alertCode": 3}
@@ -58,7 +65,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 3, null)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropraite object for alertCode 4", () => {
+    test("returns appropraite object for alertCode 4", () => {
         var expectedResponse = {
             "body": "testName has not moved in 5 minutes!",
             "data": {"alertCode": 4}
@@ -66,7 +73,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 4, null)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropriate object for alertCode 5", () => {
+    test("returns appropriate object for alertCode 5", () => {
         var expectedResponse = {
             "body": "Lost connection with testName!",
             "data": {"alertCode": 5}
@@ -74,7 +81,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 5, null)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropriate object for alertCode 6", () => {
+    test("returns appropriate object for alertCode 6", () => {
         var expectedResponse = {
             "body": "testName is nearby and might be in trouble!",
             "data": {
@@ -90,7 +97,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 6, additionalData)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropriate object for alertCode 7", () => {
+    test("returns appropriate object for alertCode 7", () => {
         var expectedResponse = {
             "body": "testName has invited you to their Virtual Companion Session!",
             "data": {
@@ -106,7 +113,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 7, additionalData)).toEqual(expectedResponse);
     });
 
-    test("createMessage(): returns appropriate object for alertCode 8", () => {
+    test("creturns appropriate object for alertCode 8", () => {
         var expectedResponse = {
             "body": "testName has joined your Companion Session!",
             "data": {"alertCode": 8}
@@ -114,7 +121,7 @@ describe('alert.js tests', function () {
         expect(Alert.createMessage("testName", 8, null)).toEqual(expectedResponse);
     });
 
-    it('createMessage(): throws error when given an invalid alert code', () => {
+    it('throws error when given createMessage is given an invalid alert code', () => {
         //return Alert.createMessage().then().catch();
         expect(() => {Alert.createMessage()}).toThrow();
         //return Alert.createMessage().then().catch(err => {expect(err).toEqual(new Error("Invalid alert code!"))});
