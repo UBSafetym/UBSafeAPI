@@ -4,5 +4,6 @@ node_js:
 branches:
   only:
   - testing
+  - master
 script:
   - npm test
