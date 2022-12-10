@@ -3,7 +3,7 @@
   "start": "node server.js",
   "dependencies": {
     "expo-server-sdk": "^3.3.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "firebase": "^5.11.1",
     "firebase-admin": "^6.5.1",
     "geofirestore": "^2.4.0",
